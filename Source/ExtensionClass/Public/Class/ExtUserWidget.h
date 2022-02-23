@@ -15,6 +15,15 @@ class EXTENSIONCLASS_API UExtUserWidget : public UUserWidget
 {
 	GENERATED_BODY()
 	
-public:
+protected:
+	virtual void NativeOnInitialized() override;
 
+public:
+	/** 用作查找的主键 */
+	UPROPERTY(BlueprintReadOnly, Category = "ExtensionClass|ExtUserWidget")
+	FString WidgetMainKey;
+
+	/** 用作查找的次键 */
+	UPROPERTY(BlueprintReadOnly, Category = "ExtensionClass|ExtUserWidget")
+	FString WidgetChildKey;
 };
