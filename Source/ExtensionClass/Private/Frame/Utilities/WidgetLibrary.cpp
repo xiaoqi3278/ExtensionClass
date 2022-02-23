@@ -5,6 +5,7 @@
 #include "Runtime/Engine/Classes/Kismet/GameplayStatics.h"
 #include "Blueprint/UserWidget.h"
 
+#include "ExtensionClass/Public/Utilities/ExtLog.h"
 #include "Frame/ExtGameInstance.h"
 #include "Frame/Manager/WidgetManager.h"
 #include "ExtensionClass/Public/Class/ExtUserWidget.h"
@@ -23,10 +24,33 @@ UWidgetManager* UWidgetLibrary::GetWidgetManager(UObject* WorldContextObject)
 	return nullptr;
 }
 
-//void UWidgetLibrary::CreateWidget()
-//{
-//	
-//}
+void UWidgetLibrary::CreateExtWidget(UObject* WorldContextObject, TSubclassOf<UExtUserWidget> WidgetClass)
+{
+	if (WidgetClass != nullptr)
+	{
+		CreateWidget<UExtUserWidget>(UGameplayStatics::GetPlayerController(WorldContextObject, 0), WidgetClass);
+	}
+}
+
+void UWidgetLibrary::AddToWidgetManager(UObject* WorldContextObject, FString WidgetKey, UExtUserWidget* Widget)
+{
+	UWidgetManager* WidgetManager = GetWidgetManager(WorldContextObject);
+
+	if (WidgetManager != nullptr)
+	{
+		WidgetManager->WidgetMap.Emplace(WidgetKey, Widget);
+	}
+}
+
+void UWidgetLibrary::AddToWidgetManagerOfGroup(UObject* WorldContextObject, FString WidgetMainKey, FString WidgetChildKey, UExtUserWidget* Widget)
+{
+	UWidgetManager* WidgetManager = GetWidgetManager(WorldContextObject);
+
+	if (WidgetManager != nullptr)
+	{
+		GetWidgetGroup(WorldContextObject, WidgetMainKey).WidgetChildMap.Emplace(WidgetChildKey, Widget);
+	}
+}
 
 UExtUserWidget* UWidgetLibrary::GetWidget(UObject* WorldContextObject, FString WidgetKey)
 {
@@ -60,6 +84,8 @@ FWidgetGroup UWidgetLibrary::GetWidgetGroup(UObject* WorldContextObject, FString
 		return WidgetManager->WidgetMainMap.FindRef(WidgetMainKey);
 	}
 
+	//WidgetManager 中不存在 WidgetMainKey
+	UE_LOG(ExtensionLog, Warning, TEXT("[%s] GetWidgetGroup(): WidgetManager=>WidgetMainMap Does not Contain %s"), *WorldContextObject->GetName(), *WidgetMainKey);
 	return FWidgetGroup();
 }
 

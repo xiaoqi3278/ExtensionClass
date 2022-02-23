@@ -14,8 +14,12 @@ struct FCheckBoxGroup
 	GENERATED_USTRUCT_BODY()
 
 	//保存一组 ExtCheckBox 的键值
-	UPROPERTY(BlueprintReadWrite)
+	UPROPERTY(BlueprintReadOnly)
 	TMap<FString, UExtCheckBox*> CheckBoxChildMap;
+
+	//当前组中选中的 ChildKey
+	UPROPERTY(BlueprintReadOnly)
+	FString CheckedChildKey = "ChildKey_NULL";
 };
 
 UCLASS()

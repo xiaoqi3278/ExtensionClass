@@ -4,22 +4,36 @@
 #include "DevelopmentUtilities/ExtCheatManager.h"
 #include "Manager/CheckBoxManager.h"
 #include "FunctionLibrary/CheckBoxLibrary.h"
+#include "Utilities/ExtLog.h"
 
 void UExtCheatManager::InitCheatManager()
 {
-	UE_LOG(LogTemp, Warning, TEXT("Create ExtCheatManager"));
+	UE_LOG(ExtensionLog, Log, TEXT("Create ExtCheatManager"));
 
 	
 }
 
-void UExtCheatManager::ShowExtCheckBoxMainKeyInLog()
+void UExtCheatManager::ShowMainKey()
 {
 	TArray<FString> MainKeyArr = UCheckBoxLibrary::GetMainKeyArray(this);
 
-	UE_LOG(LogTemp, Warning, TEXT("------------------------------------------MainKeyArrayStart------------------------------------------"));
+	UE_LOG(ExtensionLog, Log, TEXT("------------------------------------------MainKeyArrayStart------------------------------------------"));
 
 	for (auto Itr : MainKeyArr)
-		UE_LOG(LogTemp, Warning, TEXT("%s"), *Itr);
+		UE_LOG(ExtensionLog, Log, TEXT("%s"), *Itr);
 
-	UE_LOG(LogTemp, Warning, TEXT("------------------------------------------MainKeyArrayEnd--------------------------------------------"));
+	UE_LOG(ExtensionLog, Log, TEXT("-------------------------------------------MainKeyArrayEnd-------------------------------------------"));
+}
+
+void UExtCheatManager::ShowChildKey(FString MainKey)
+{
+	TArray<FString> ChildKeyArr = UCheckBoxLibrary::GetChildKeyArray(this, MainKey);
+
+	UE_LOG(ExtensionLog, Log, TEXT("----------------------------------------------MainKey: %s------------------------------------------"), *MainKey);
+	UE_LOG(ExtensionLog, Log, TEXT("------------------------------------------ChildKeyArrayStart------------------------------------------"));
+
+	for (auto Itr : ChildKeyArr)
+		UE_LOG(ExtensionLog, Log, TEXT("%s"), *Itr);
+
+	UE_LOG(ExtensionLog, Log, TEXT("-------------------------------------------ChildKeyArrayEnd------------------------------------------"));
 }

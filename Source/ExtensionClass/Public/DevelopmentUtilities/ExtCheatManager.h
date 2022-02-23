@@ -21,12 +21,12 @@ class EXTENSIONCLASS_API UExtCheatManager : public UCheatManager
 public:
 	virtual void InitCheatManager() override;
 
-private:
-	/** CheckBox 管理类 */
-	UPROPERTY()
-	ACheckBoxManager* CheckBoxManager;
-
 public:
+	/** 输出所有 ExtCheckBox 组的主键到日志中 */
 	UFUNCTION(Exec)
-	void ShowExtCheckBoxMainKeyInLog();
+	void ShowMainKey();
+
+	/** 输出对应 ExtCheckBox 组的所有 ChileKey 到日志中 */
+	UFUNCTION(Exec)
+	void ShowChildKey(FString MainKey);
 };

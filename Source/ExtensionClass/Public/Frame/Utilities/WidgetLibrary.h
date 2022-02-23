@@ -29,8 +29,26 @@ public:
 	static UWidgetManager* GetWidgetManager(UObject* WorldContextObject);
 
 	/** 创建 Widget */
-	//UFUNCTION(BlueprintCallable, Category = "ExtensionClass|Frame|WidgetLibrary")
-	//static void CreateWidget();
+	UFUNCTION(BlueprintCallable, meta = (WorldContext = "WorldContextObject"), Category = "ExtensionClass|Frame|WidgetLibrary")
+	static void CreateExtWidget(UObject* WorldContextObject, TSubclassOf<UExtUserWidget> WidgetClass);
+
+	/**
+	 * 将一个 ExtUserWidget 对象加入 WidgetManager 中的 WidgetMap 中
+	 * 
+	 * @param WidgetKey			键
+	 * @param Widget			加入管理的 ExtUserWidget对象
+	 */
+	UFUNCTION(BlueprintCallable, meta = (WorldContext = "WorldContextObject"), Category = "ExtensionClass|Frame|WidgetLibrary")
+	static void AddToWidgetManager(UObject* WorldContextObject, FString WidgetKey, UExtUserWidget* Widget);
+
+	/**
+	 * 将一个 ExtUserWidget 对象加入 WidgetManager 中的 WidgetGroup 中
+	 * 
+	 * @param WidgetMainKey		用作查找 WidgetGroup 的主键
+	 * @param WidgetChildKey	用作查找 ExtUserWIdget 的次键
+	 */
+	UFUNCTION(BlueprintCallable, meta = (WorldContext = "WorldContextObject"), Category = "ExtensionClass|Frame|WidgetLibrary")
+	static void AddToWidgetManagerOfGroup(UObject* WorldContextObject, FString WidgetMainKey, FString WidgetChildKey, UExtUserWidget* Widget);
 
 	/**
 	* 查找 WidgetManager 中 WidgetMap 对应的一个 UExtUserWidget

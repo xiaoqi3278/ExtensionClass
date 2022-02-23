@@ -42,18 +42,31 @@ private:
 	UPROPERTY(EditAnywhere, Category = "ExtensionClass|Utilities")
 	FString GenerateIndex;
 
+	/** 是否加入到 CheckBoxManager 中进行管理 */
+	UPROPERTY(EditAnywhere, Category = "ExtensionClass|Control")
+	bool bDontManage;
+
+	/** 已选中时无法取消选中状态 */
+	UPROPERTY(EditAnywhere, Category = "ExtensionClass|Control")
+	bool bAlwaysChecked;
+
+	/** 重复点击已选中按钮时是否执行绑定事件 */
+	UPROPERTY(EditAnywhere, category = "ExtensionClass|Control")
+	bool bExecuteBindOnReChecked;
+
 	/** CheckBox 管理类 */
 	UPROPERTY()
 	ACheckBoxManager* Manager;
+
+	/** 是否是需要初始化 */
+	UPROPERTY()
+	bool bIsInitial = true;
 
 public:
 	/** Applies all properties to the live slot if possible. */
 	virtual void SynchronizeProperties() override;
 
-	virtual void OnWidgetRebuilt() override;
-
-	void BuildNavigation();
-
+public:
 	/**
 	 * 点击当前 ExtCheckBox 时调用
 	 * 
@@ -65,5 +78,14 @@ public:
 	/** 设置当前 ExtCheckBox 的选中状态，会调用 OnExtCheckStateChanged 绑定的事件 */
 	UFUNCTION(BlueprintCallable)
 	void SetExtCheckedState(ECheckBoxState ExtCheckedState);
+
+private:
+	/** ExtCheckBox 初始化 */
+	UFUNCTION()
+	virtual void OnInitialized();
+
+	/** 根据输入的字符自动生成 Index */
+	UFUNCTION()
+	void GenerateToIndex(FString GenerateKey);
 };
 

@@ -7,11 +7,14 @@
 #include "ExtUserWidget.generated.h"
 
 /**
- * 
+ * 拓展自 UUserWidget
  */
+
 UCLASS()
 class EXTENSIONCLASS_API UExtUserWidget : public UUserWidget
 {
 	GENERATED_BODY()
 	
+public:
+
 };
