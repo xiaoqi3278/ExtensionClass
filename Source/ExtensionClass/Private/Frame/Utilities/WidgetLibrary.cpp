@@ -9,7 +9,9 @@
 #include "Frame/Manager/WidgetManager.h"
 #include "ExtensionClass/Public/Class/ExtUserWidget.h"
 
-UWidgetManager* GetWidgetManager(UObject* WorldContextObject)
+
+
+UWidgetManager* UWidgetLibrary::GetWidgetManager(UObject* WorldContextObject)
 {
 	UExtGameInstance* TempGameInstance = Cast<UExtGameInstance>(UGameplayStatics::GetGameInstance(WorldContextObject));
 

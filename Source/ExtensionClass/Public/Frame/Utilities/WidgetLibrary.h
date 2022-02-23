@@ -10,9 +10,9 @@
 #include "WidgetLibrary.generated.h"
 
 /**
- * Widget ¹¤¾ßÀà
+ * Widget å·¥å…·ç±»
  * 
- * Ìá¹© Widget Ïà¹Øº¯Êı
+ * æä¾› Widget ç›¸å…³å‡½æ•°
  */
 
 class UWidgetManager;
@@ -24,66 +24,66 @@ class EXTENSIONCLASS_API UWidgetLibrary : public UBlueprintFunctionLibrary
 	GENERATED_BODY()
 	
 public:
-	/** »ñÈ¡ WidgetManager */
+	/** è·å– WidgetManager */
 	UFUNCTION(BlueprintCallable, meta = (WorldContext = "WorldContextObject"), Category = "ExtensionClass|Frame|WidgetLibrary")
 	static UWidgetManager* GetWidgetManager(UObject* WorldContextObject);
 
-	/** ´´½¨ Widget */
+	/** åˆ›å»º Widget */
 	//UFUNCTION(BlueprintCallable, Category = "ExtensionClass|Frame|WidgetLibrary")
 	//static void CreateWidget();
 
 	/**
-	* ²éÕÒ WidgetManager ÖĞ WidgetMap ¶ÔÓ¦µÄÒ»¸ö UExtUserWidget
+	* æŸ¥æ‰¾ WidgetManager ä¸­ WidgetMap å¯¹åº”çš„ä¸€ä¸ª UExtUserWidget
 	* 
-	* @param WidgetKey			ÓÃ×÷²éÕÒµÄ¼ü
+	* @param WidgetKey			ç”¨ä½œæŸ¥æ‰¾çš„é”®
 	* 
-	* @return	²éÕÒµ½µÄ ExtUserWidget£¬¿ÉÎª nullptr
+	* @return	æŸ¥æ‰¾åˆ°çš„ ExtUserWidgetï¼Œå¯ä¸º nullptr
 	*/
 	UFUNCTION(BlueprintCallable, meta = (WorldContext = "WorldContextObject"), Category = "ExtensionClass|Frame|WidgetLibrary")
 	static UExtUserWidget* GetWidget(UObject* WorldContextObject, FString WidgetKey);
 
 	/**
-	* ²éÕÒ WidgetManager ÖĞ Ä³¸ö WidgetGroup ¶ÔÓ¦µÄÒ»¸ö ExtUserWidget
+	* æŸ¥æ‰¾ WidgetManager ä¸­ æŸä¸ª WidgetGroup å¯¹åº”çš„ä¸€ä¸ª ExtUserWidget
 	*
-	* @param WidgetMainKey		ÓÃ×÷²éÕÒ WidgetGroup µÄ¼ü
-	* @param WidgetChildKey		ÓÃ×÷²éÕÒ WidgetGroup ÖĞ¶ÔÓ¦µÄÒ»¸ö ExtUserWidget µÄ¼ü
+	* @param WidgetMainKey		ç”¨ä½œæŸ¥æ‰¾ WidgetGroup çš„é”®
+	* @param WidgetChildKey		ç”¨ä½œæŸ¥æ‰¾ WidgetGroup ä¸­å¯¹åº”çš„ä¸€ä¸ª ExtUserWidget çš„é”®
 	*/
 	UFUNCTION(BlueprintCallable, meta = (WorldContext = "WorldContextObject"), Category = "ExtensionClass|Frame|WidgetLibrary")
 	static UExtUserWidget* GetOneWidgetOfGroup(UObject* WorldContextObject, FString WidgetMainKey, FString WidgetChildKey);
 
 	/**
-	* ²éÕÒ WidgetManager ÖĞ¶ÔÓ¦µÄ FWidgetGroup
+	* æŸ¥æ‰¾ WidgetManager ä¸­å¯¹åº”çš„ FWidgetGroup
 	* 
-	* @param WidgetMainKey		ÓÃ×÷²éÕÒµÄ¼ü
+	* @param WidgetMainKey		ç”¨ä½œæŸ¥æ‰¾çš„é”®
 	* 
-	* @return	²éÕÒµ½µÄ WidgetGroup£¬¿ÉÎªÄ¬ÈÏ¹¹ÔìµÄ¶ÔÏó
+	* @return	æŸ¥æ‰¾åˆ°çš„ WidgetGroupï¼Œå¯ä¸ºé»˜è®¤æ„é€ çš„å¯¹è±¡
 	*/
 	UFUNCTION(BlueprintCallable, meta = (WorldContext = "WorldContextObject"), Category = "ExtensionClass|Frame|WidgetLibrary")
 	static FWidgetGroup GetWidgetGroup(UObject* WorldContextObject, FString WidgetMainKey);
 
 	/**
-	* ²éÕÒ WidgetManager ÖĞ¶ÔÓ¦µÄ Ò»¸ö WidgetGroupÖĞËùÓĞµÄ ExtUserWidget
+	* æŸ¥æ‰¾ WidgetManager ä¸­å¯¹åº”çš„ ä¸€ä¸ª WidgetGroupä¸­æ‰€æœ‰çš„ ExtUserWidget
 	* 
-	* @param WidgetMainKey		ÓÃ×÷²éÕÒµÄ¼ü
+	* @param WidgetMainKey		ç”¨ä½œæŸ¥æ‰¾çš„é”®
 	* 
-	* @return	²éÕÒµÀµÂ ExtUserWidget Êı×é£¬¿ÉÎª¿Õ
+	* @return	æŸ¥æ‰¾é“å¾· ExtUserWidget æ•°ç»„ï¼Œå¯ä¸ºç©º
 	*/
 	UFUNCTION(BlueprintCallable, meta = (WorldContext = "WorldContextObject"), Category = "ExtensionClass|Frame|WidgetLibrary")
 	static TArray<UExtUserWidget*> GetWidgetArray(UObject* WorldContextObject, FString WidgetMainKey);
 
 	/** 
-	* ÒÆ³ı WidgetManager ÖĞ WidgetMap ¶ÔÓ¦µÄÄ³Ò»¸ö ExtUserWidget
+	* ç§»é™¤ WidgetManager ä¸­ WidgetMap å¯¹åº”çš„æŸä¸€ä¸ª ExtUserWidget
 	* 
-	* @param WidgetKey			ÓÃ×÷²éÕÒµÄ¼ü
+	* @param WidgetKey			ç”¨ä½œæŸ¥æ‰¾çš„é”®
 	*/
 	UFUNCTION(BlueprintCallable, meta = (WorldContext = "WorldContextObject"), Category = "ExtensionClass|Frame|WidgetLibrary")
 	static void RemoveWidget(UObject* WorldContextObject, FString WidgetKey);
 
 	/**
-	* ÒÆ³ı WidgetManager ÖĞ WidgetMainMap ÖĞ¶ÔÓ¦µÄ WidgetGroup ÖĞµÄÄ³Ò»¸ö ExtUserWidget
+	* ç§»é™¤ WidgetManager ä¸­ WidgetMainMap ä¸­å¯¹åº”çš„ WidgetGroup ä¸­çš„æŸä¸€ä¸ª ExtUserWidget
 	* 
-	* @param WidgetMainKey		ÓÃ×÷²éÕÒ WidgetGroup µÄ¼ü
-	* @param WidgetChildKey		ÓÃ×÷²éÕÒ WidgetGroup ÖĞ¶ÔÓ¦µÄÒ»¸ö ExtUserWidget µÄ¼ü
+	* @param WidgetMainKey		ç”¨ä½œæŸ¥æ‰¾ WidgetGroup çš„é”®
+	* @param WidgetChildKey		ç”¨ä½œæŸ¥æ‰¾ WidgetGroup ä¸­å¯¹åº”çš„ä¸€ä¸ª ExtUserWidget çš„é”®
 	*/
 	UFUNCTION(BlueprintCallable, meta = (WorldContext = "WorldContextObject"), Category = "ExtensionClass|Frame|WidgetLibrary")
 	static void RemoveOneOfGroupWidget(UObject* WorldContextObject, FString WidgetMainKey, FString WidgetChildKey);
