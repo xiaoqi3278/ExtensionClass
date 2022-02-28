@@ -20,6 +20,9 @@ class EXTENSIONCLASS_API UExtObject : public UObject
 public:
 	virtual UWorld* GetWorld() const override;
 
+protected:
+	virtual void NativeBegin();
+
 public:
 	UFUNCTION(BlueprintImplementableEvent)
 	void BeginPlay();

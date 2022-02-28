@@ -11,6 +11,7 @@
  */
 
 class UWidgetManager;
+class UModelManager;
 
 UCLASS()
 class EXTENSIONCLASS_API UExtGameInstance : public UGameInstance
@@ -18,9 +19,13 @@ class EXTENSIONCLASS_API UExtGameInstance : public UGameInstance
 	GENERATED_BODY()
 	
 public:
-	/** ȫ�� WidgetManager */
+	/** 全局 WidgetManager */
 	UPROPERTY()
 	UWidgetManager* WidgetManager;
+
+	/** 全局 ModelManager */
+	UPROPERTY()
+	UModelManager* ModelManager;
 
 public:
 	virtual void Init() override;

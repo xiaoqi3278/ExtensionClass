@@ -14,9 +14,6 @@ UCLASS()
 class EXTENSIONCLASS_API UExtUserWidget : public UUserWidget
 {
 	GENERATED_BODY()
-	
-protected:
-	virtual void NativeOnInitialized() override;
 
 public:
 	/** 用作查找的主键 */

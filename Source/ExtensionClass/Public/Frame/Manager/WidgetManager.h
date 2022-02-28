@@ -7,8 +7,8 @@
 #include "WidgetManager.generated.h"
 
 /**
- * ÍØÕ¹×Ô UObject
- * Widget¹ÜÀíÆ÷
+ * æ‹“å±•è‡ª UObject
+ * Widgetç®¡ç†å™¨
  */
 
 class UExtUserWidget;
@@ -18,7 +18,7 @@ struct FWidgetGroup
 {
 	GENERATED_BODY()
 
-	//´æ´¢Ä³Ò»ÀàÏà¹ØµÄ Widget
+	//å­˜å‚¨æŸä¸€ç±»ç›¸å…³çš„ Widget
 	UPROPERTY(BlueprintReadOnly)
 	TMap<FString, UExtUserWidget*> WidgetChildMap;
 };
@@ -30,11 +30,11 @@ class EXTENSIONCLASS_API UWidgetManager : public UObject
 	
 public:
 
-	/** Ã¿¸ö¼ü¶ÔÓ¦Ò»¸ö Widget */
+	/** å­˜å‚¨Widget, æ¯ä¸ªé”®å¯¹åº”ä¸€ä¸ª Widget */
 	UPROPERTY(BlueprintReadOnly)
 	TMap<FString, UExtUserWidget*> WidgetMap;
 
-	/** Ã¿¸ö¼ü¶ÔÓ¦Ò»¸ö FWidgetGroup */
+	/** å­˜å‚¨WidgetGroup, æ¯ä¸ªé”®å¯¹åº”ä¸€ä¸ª FWidgetGroup */
 	UPROPERTY(BlueprintReadOnly)
 	TMap<FString, FWidgetGroup> WidgetMainMap;
 

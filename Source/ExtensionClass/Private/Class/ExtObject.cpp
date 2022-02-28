@@ -10,7 +10,7 @@ void UExtObject::PostInitProperties()
 	/** 只在游戏世界中调用 */
 	if (GetWorld())
 	{
-		BeginPlay();
+		NativeBegin();
 	}
 }
 
@@ -31,4 +31,9 @@ UWorld* UExtObject::GetWorld() const
 		return GetOuter()->GetWorld();
 	}
 	return nullptr;
+}
+
+void UExtObject::NativeBegin()
+{
+	BeginPlay();
 }
