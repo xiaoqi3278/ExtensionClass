@@ -3,12 +3,4 @@
 
 #include "Class/Tree.h"
 
-UTree::UTree()
-{
-	RootNode = nullptr;
-}
 
-UTree::UTree(TData Data)
-{
-
-}
