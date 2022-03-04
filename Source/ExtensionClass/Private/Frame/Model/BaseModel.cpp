@@ -3,7 +3,7 @@
 
 #include "Frame/Model/BaseModel.h"
 
-void UBaseModel::NativeBegin()
+void UBaseModel::OnBegin()
 {
 
 }

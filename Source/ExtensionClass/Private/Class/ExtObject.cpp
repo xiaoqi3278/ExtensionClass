@@ -10,7 +10,7 @@ void UExtObject::PostInitProperties()
 	/** 只在游戏世界中调用 */
 	if (GetWorld())
 	{
-		NativeBegin();
+		OnBegin();
 	}
 }
 
@@ -33,7 +33,17 @@ UWorld* UExtObject::GetWorld() const
 	return nullptr;
 }
 
-void UExtObject::NativeBegin()
+void UExtObject::OnBegin()
 {
 	BeginPlay();
+}
+
+void UExtObject::OnEnd()
+{
+
+}
+
+void UExtObject::DestroyObject()
+{
+	this->MarkPendingKill();
 }

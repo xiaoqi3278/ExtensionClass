@@ -12,6 +12,7 @@
 
 class UWidgetManager;
 class UModelManager;
+class UModelTree;
 
 UCLASS()
 class EXTENSIONCLASS_API UExtGameInstance : public UGameInstance
@@ -26,6 +27,10 @@ public:
 	/** 全局 ModelManager */
 	UPROPERTY()
 	UModelManager* ModelManager;
+
+	/** 全局 Model 树 */
+	//UPROPERTY()
+	//UModelTree* ModelTree;
 
 public:
 	virtual void Init() override;

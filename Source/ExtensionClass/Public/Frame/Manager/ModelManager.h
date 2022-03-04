@@ -11,7 +11,7 @@
  */
 
 class UBaseModel;
-
+class UModelTree;
 
 UCLASS()
 class EXTENSIONCLASS_API UModelManager : public UExtObject
@@ -20,6 +20,9 @@ class EXTENSIONCLASS_API UModelManager : public UExtObject
 	
 public:
 
+	UModelManager();
 
-
+	/** 全局 Model 树 */
+	UPROPERTY(BlueprintReadOnly)
+	UModelTree* ModelTree;
 };

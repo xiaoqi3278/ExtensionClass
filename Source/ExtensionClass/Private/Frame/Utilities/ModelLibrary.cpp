@@ -8,6 +8,7 @@
 #include "Frame/ExtGameInstance.h"
 #include "Frame/Manager/ModelManager.h"
 #include "Frame/Model/BaseModel.h"
+#include "Frame/Utilities/ModelTree.h"
 
 UModelManager* UModelLibrary::GetModelManager(UObject* WorldContextObject)
 {
@@ -27,7 +28,7 @@ bool UModelLibrary::CheckModelManagerAndOutLog(UObject* WorldContextObject, UMod
 	return false;
 }
 
-UBaseModel* UModelLibrary::CreateMainModel(UObject* WorldContextObject, TSubclassOf<UBaseModel> ModelClass)
+UBaseModel* UModelLibrary::CreateModel(UObject* WorldContextObject, TSubclassOf<UBaseModel> ParentModelClass, TSubclassOf<UBaseModel> ModelClass)
 {
 	if (*ModelClass == nullptr)
 	{
@@ -35,57 +36,26 @@ UBaseModel* UModelLibrary::CreateMainModel(UObject* WorldContextObject, TSubclas
 		return nullptr;
 	}
 
-	//创建 Model 对象
-	UBaseModel* MainModel = NewObject<UBaseModel>(ModelClass);
-
-	//加入 ModelManager
-	//UModelManager* ModelManager = GetModelManager(WorldContextObject);
-	//if (ModelManager != nullptr)
-	//{
-	//	ModelManager->ModelMainMap.Emplace(ModelClass, MainModel);
-	//}
-
-	return MainModel;
-}
-
-UBaseModel* UModelLibrary::CreateChildModel(UObject* WorldContextObject, TSubclassOf<UBaseModel> OwnerModelClass, TSubclassOf<UBaseModel> ModelClass)
-{
-	if (*ModelClass == nullptr)
-	{
-		UE_LOG(ExtensionLog, Warning, TEXT("[%s] CreateChildModel(): 指定的创建类型为空！"), *WorldContextObject->GetName());
-		return nullptr;
-	}
-
-	//创建 Model 对象
-	UBaseModel* ChildModel = NewObject<UBaseModel>(ModelClass);
-
-	if (*OwnerModelClass == nullptr)
-	{
-		UE_LOG(ExtensionLog, Warning, TEXT("[%s] CreateChildModel(): 指定的主 Model 类型为空！"), *WorldContextObject->GetName());
-		return nullptr;
-	}
-
-	//加入 ModelManager
-	//UModelManager* ModelManager = GetModelManager(WorldContextObject);
-	//if (CheckModelManagerAndOutLog(WorldContextObject, ModelManager, "CreateChildModel"))
-	//{
-	//	(ModelManager->ModelGroupMap.FindOrAdd(OwnerModelClass)).ModelChildMap.Emplace(ModelClass, ChildModel);
-	//}
-
-	return ChildModel;
-}
-
-void UModelLibrary::DestroyMainModel(UObject* WorldContextObject, TSubclassOf<UBaseModel> ModelClass)
-{
-	if (*ModelClass == nullptr)
-	{
-		UE_LOG(ExtensionLog, Warning, TEXT("[%s] DestroyModel(): 指定的销毁类型为空！"), *WorldContextObject->GetName());
-		return;
-	}
-
 	UModelManager* ModelManager = GetModelManager(WorldContextObject);
-	if (CheckModelManagerAndOutLog(WorldContextObject, ModelManager, "DestroyModel"))
+	if (CheckModelManagerAndOutLog(WorldContextObject, ModelManager, "CraeteModel"))
 	{
-		
+		//创建 Model 对象
+		UBaseModel* NewModel = NewObject<UBaseModel>(ModelClass);
+
+		//将 Model 对象添加到 全局 ModelTree 中
+		ModelManager->ModelTree->Add(ParentModelClass, NewModel);
+
+		return NewModel;
+	}
+
+	return nullptr;
+}
+
+void UModelLibrary::DestroyModel(UObject* WorldContextObject, TSubclassOf<UBaseModel> ModelClass)
+{
+	UModelManager* ModelManager = GetModelManager(WorldContextObject);
+	if (CheckModelManagerAndOutLog(WorldContextObject, ModelManager, "CraeteModel"))
+	{
+		ModelManager->ModelTree->DeleteNode(ModelClass);
 	}
 }

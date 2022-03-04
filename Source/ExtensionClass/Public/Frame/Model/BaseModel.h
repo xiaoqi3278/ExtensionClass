@@ -15,5 +15,5 @@ class EXTENSIONCLASS_API UBaseModel : public UExtObject
 	GENERATED_BODY()
 	
 protected:
-	virtual void NativeBegin() override;
+	virtual void OnBegin() override;
 };

@@ -3,3 +3,10 @@
 
 #include "Frame/Manager/ModelManager.h"
 
+#include "Frame/Utilities/ModelTree.h"
+
+UModelManager::UModelManager()
+{
+	UBaseModel* MainModel = NewObject<UBaseModel>();
+	ModelTree = NewObject<UModelTree>(MainModel);
+}

@@ -21,9 +21,16 @@ public:
 	virtual UWorld* GetWorld() const override;
 
 protected:
-	virtual void NativeBegin();
+	virtual void OnBegin();
+	virtual void OnEnd();
 
 public:
 	UFUNCTION(BlueprintImplementableEvent)
 	void BeginPlay();
+
+	UFUNCTION(BlueprintImplementableEvent)
+	void EndPlay();
+
+	UFUNCTION(BlueprintCallable)
+	void DestroyObject();
 };
