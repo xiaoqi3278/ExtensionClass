@@ -5,8 +5,9 @@
 
 #include "Frame/Utilities/ModelTree.h"
 
-UModelManager::UModelManager()
+void UModelManager::OnBegin()
 {
-	UBaseModel* MainModel = NewObject<UBaseModel>();
-	ModelTree = NewObject<UModelTree>(MainModel);
+	Super::OnBegin();
+
+	ModelTree = NewObject<UModelTree>(this);
 }

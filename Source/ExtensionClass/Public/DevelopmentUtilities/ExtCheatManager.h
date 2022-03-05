@@ -29,4 +29,11 @@ public:
 	/** 输出对应 ExtCheckBox 组的所有 ChileKey 到日志中 */
 	UFUNCTION(Exec)
 	void ShowChildKey(FString MainKey);
+
+	/** 输出所有的 Model 名称到日志中 */
+	UFUNCTION(Exec)
+	void ShowAllModelName();
+
+	UFUNCTION(Exec)
+	void ShowTest();
 };

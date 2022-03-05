@@ -10,14 +10,15 @@
 #include "ModelTree.generated.h"
 
 /**
- * 
+ * 树形 Model 容器
  */
 
 class UBaseModel;
 
+/** 单个节点结构 */
 struct FModelTreeNode
 {
-	//节点模块
+	//节点包含的模块
 	UBaseModel* Model;
 
 	//父节点
@@ -25,18 +26,27 @@ struct FModelTreeNode
 	TSubclassOf<UBaseModel> ParentModelClass;
 
 	//子节点
-	TArray<FModelTreeNode> ChildNodes;
+	TArray<FModelTreeNode*> ChildNodes;
 
 	FModelTreeNode()
 	{
 		ParentModelClass = nullptr;
 		Model = nullptr;
+		ChildNodes = TArray<FModelTreeNode*>();
 	}
 
 	FModelTreeNode(UBaseModel* TempModel)
 	{
 		ParentModelClass = nullptr;
 		Model = TempModel;
+		ChildNodes = TArray<FModelTreeNode*>();
+	}
+
+	FModelTreeNode(UBaseModel* TempModel, TSubclassOf<UBaseModel> TempParentModelClass)
+	{
+		ParentModelClass = TempParentModelClass;
+		Model = TempModel;
+		ChildNodes = TArray<FModelTreeNode*>();
 	}
 };
 
@@ -57,7 +67,12 @@ public:
 	UModelTree(UBaseModel* Model);
 
 	/**
-	 * 创建一个包含传入 Model 的节点
+	* 创建一个包含传入 Model 的节点
+	*/
+	FModelTreeNode CreateNode(UBaseModel* Model);
+
+	/**
+	 * 创建一个包含传入 Model 的节点并加入 ModelTree 中
 	 * 
 	 * @param ParentModelClass		父节点类型
 	 * @param Model					节点包含的 UBaseModel
@@ -68,10 +83,10 @@ public:
 	/**
 	 * 搜索包含对应类型的节点
 	 * 
-	 * @param SearchNodeClass		需要搜索的节点包含的 Model s类型
+	 * @param SearchNodeClass		需要搜索的节点包含的 Model 类型
 	 * @return						搜索到的节点
 	 */
-	FModelTreeNode SearchNode(TSubclassOf<UBaseModel> SearchNodeClass);
+	FModelTreeNode* SearchNode(TSubclassOf<UBaseModel> SearchNodeClass, FModelTreeNode* SearchBeginNode);
 
 	/**
 	 * 删除包含对应类型的节点以及所有子节点，对应会删除节点包含的所有 Model 对象
@@ -80,4 +95,17 @@ public:
 	 */
 	UFUNCTION()
 	void DeleteNode(TSubclassOf<UBaseModel> DeleteNodeClass);
+
+	/**
+	* 搜索对应节点的所有子节点
+	* 
+	* @param SearchModelClass		需要搜索的节点包含的 Model 类型
+	* @return						搜索到的所有子节点
+	*/
+	TArray<FModelTreeNode*> SearchAllChildNode(TSubclassOf<UBaseModel> SearchModelClass);
+
+	/**
+	* 获取所有的节点
+	*/
+	TArray<FModelTreeNode*> GetAllNode();
 };

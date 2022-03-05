@@ -20,7 +20,7 @@ class EXTENSIONCLASS_API UModelManager : public UExtObject
 	
 public:
 
-	UModelManager();
+	virtual void OnBegin() override;
 
 	/** 全局 Model 树 */
 	UPROPERTY(BlueprintReadOnly)

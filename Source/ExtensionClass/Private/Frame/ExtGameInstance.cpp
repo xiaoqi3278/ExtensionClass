@@ -6,11 +6,12 @@
 #include "Frame/Manager/WidgetManager.h"
 #include "Frame/Utilities/ModelTree.h"
 #include "Frame/Model/BaseModel.h"
+#include "Frame/Manager/ModelManager.h"
 
 void UExtGameInstance::Init()
 {
 	WidgetManager = NewObject<UWidgetManager>(this);
-
+	ModelManager = NewObject<UModelManager>(this);
 	//UBaseModel* MainModel = NewObject<UBaseModel>();
 	//ModelTree = NewObject<UModelTree>(MainModel);
 }
