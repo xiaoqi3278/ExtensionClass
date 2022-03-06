@@ -59,5 +59,10 @@ void UExtCheatManager::ShowTest()
 {
 	UModelTree* Test = UModelLibrary::GetModelManager(this)->ModelTree;
 
-	UE_LOG(ExtensionLog, Warning, TEXT("%s"), *Test->RootNode.Model->GetName());
+	UE_LOG(ExtensionLog, Log, TEXT("---------------------------------------------ShowTestStart-------------------------------------------"));
+
+	for (auto& Itr : Test->GetAllNode())
+		UE_LOG(ExtensionLog, Log, TEXT("%s"), *Itr->Model->GetName());
+
+	UE_LOG(ExtensionLog, Log, TEXT("----------------------------------------------ShowTestEnd--------------------------------------------"));
 }

@@ -7,16 +7,14 @@
 
 #include "Frame/Model/BaseModel.h"
 
-UModelTree::UModelTree()
+void UModelTree::OnBegin()
 {
-	//构造默认根节点
-	UBaseModel* DefaultModel = NewObject<UBaseModel>();
-	RootNode = FModelTreeNode(DefaultModel);
-}
+	Super::OnBegin();
 
-UModelTree::UModelTree(UBaseModel* Model)
-{
-	RootNode = FModelTreeNode(Model);
+	//构造默认根节点
+	DefaultModel = NewObject<UBaseModel>();
+	//RootNode = FModelTreeNode(DefaultModel);
+	RootNode = MakeShareable(new FModelTreeNode(DefaultModel));
 }
 
 FModelTreeNode UModelTree::CreateNode(UBaseModel* Model)
@@ -31,20 +29,26 @@ FModelTreeNode UModelTree::CreateNode(UBaseModel* Model)
 
 void UModelTree::Add(TSubclassOf<UBaseModel> ParentModelClass, UBaseModel* Model)
 {
-	FModelTreeNode* NewNode = new FModelTreeNode(Model, ParentModelClass);
-	FModelTreeNode* ParentNode = SearchNode(ParentModelClass, &RootNode);
+	TSharedPtr<FModelTreeNode> NewNode = MakeShareable(new FModelTreeNode(Model, ParentModelClass));
+	TSharedPtr<FModelTreeNode> ParentNode = SearchNode(ParentModelClass, RootNode);
 
-	//若指定的父节点为空
-	if (ParentNode->Model == nullptr)
+	//若指定的父节点类型为空则默认添加到根节点下
+	if (ParentModelClass == nullptr)
 	{
-		UE_LOG(ExtensionLog, Warning, TEXT("[%s] ModelTree->Add(): 指定的父节点类型为空！"), *this->GetName());
+		RootNode->ChildNodes.Add(NewNode);
+	}
+
+	
+	if (ParentNode == nullptr || ParentNode->Model == nullptr)
+	{
+		UE_LOG(ExtensionLog, Warning, TEXT("[%s] ModelTree->Add(): 不存在指定的父节点。ParentModelClass: %s。Model: %s ！"), *this->GetName(), *ParentModelClass->GetName(), *Model->GetName());
 		return;
 	}
 
 	ParentNode->ChildNodes.Add(NewNode);
 }
 
-FModelTreeNode* UModelTree::SearchNode(TSubclassOf<UBaseModel> SearchNodeClass, FModelTreeNode* SearchBeginNode)
+TSharedPtr<FModelTreeNode> UModelTree::SearchNode(TSubclassOf<UBaseModel> SearchNodeClass, TSharedPtr<FModelTreeNode> SearchBeginNode)
 {
 	if (SearchNodeClass == nullptr)
 	{
@@ -53,9 +57,9 @@ FModelTreeNode* UModelTree::SearchNode(TSubclassOf<UBaseModel> SearchNodeClass, 
 	}
 
 	//若搜索类型为根节点类型
-	if (SearchNodeClass == RootNode.Model->GetClass())
+	if (SearchNodeClass == RootNode->Model->GetClass())
 	{
-		return &RootNode;
+		return RootNode;
 	}
 
 	//递归搜索
@@ -66,7 +70,7 @@ FModelTreeNode* UModelTree::SearchNode(TSubclassOf<UBaseModel> SearchNodeClass, 
 			return Itr;
 		}
 		
-		FModelTreeNode* TempNode = SearchNode(SearchNodeClass, Itr);
+		TSharedPtr<FModelTreeNode> TempNode = SearchNode(SearchNodeClass, Itr);
 		if (TempNode != nullptr)
 		{
 			return TempNode;
@@ -78,7 +82,7 @@ FModelTreeNode* UModelTree::SearchNode(TSubclassOf<UBaseModel> SearchNodeClass, 
 
 void UModelTree::DeleteNode(TSubclassOf<UBaseModel> DeleteNodeClass)
 {
-	FModelTreeNode* DeleteNode = SearchNode(DeleteNodeClass, &RootNode);
+	TSharedPtr<FModelTreeNode> DeleteNode = SearchNode(DeleteNodeClass, RootNode);
 
 	if (DeleteNode->Model == nullptr)
 	{
@@ -95,23 +99,23 @@ void UModelTree::DeleteNode(TSubclassOf<UBaseModel> DeleteNodeClass)
 	DeleteNode->Model = nullptr;
 }
 
-TArray<FModelTreeNode*> UModelTree::SearchAllChildNode(TSubclassOf<UBaseModel> SearchModelClass)
+TArray<TSharedPtr<FModelTreeNode>> UModelTree::SearchAllChildNode(TSubclassOf<UBaseModel> SearchModelClass)
 {
-	TArray<FModelTreeNode*> NodeArray = TArray<FModelTreeNode*>();
+	TArray<TSharedPtr<FModelTreeNode>> NodeArray = TArray<TSharedPtr<FModelTreeNode>>();
 
-	if (SearchNode(SearchModelClass, &RootNode) == nullptr)
+	if (SearchNode(SearchModelClass, RootNode) == nullptr)
 	{
 		UE_LOG(ExtensionLog, Warning, TEXT("[%s] SearchAllChildNode(): 搜索类型为空！"), *this->GetName());
 		return NodeArray;
 	}
 
 	//若子节点为空
-	if (SearchNode(SearchModelClass, &RootNode)->ChildNodes.IsEmpty())
+	if (SearchNode(SearchModelClass, RootNode)->ChildNodes.IsEmpty())
 	{
 		return NodeArray;
 	}
 
-	for (auto& Itr : SearchNode(SearchModelClass, &RootNode)->ChildNodes)
+	for (auto& Itr : SearchNode(SearchModelClass, RootNode)->ChildNodes)
 	{
 		NodeArray.Add(Itr);
 		if (!Itr->ChildNodes.IsEmpty())
@@ -123,16 +127,16 @@ TArray<FModelTreeNode*> UModelTree::SearchAllChildNode(TSubclassOf<UBaseModel> S
 	return NodeArray;
 }
 
-TArray<FModelTreeNode*> UModelTree::GetAllNode()
+TArray<TSharedPtr<FModelTreeNode>> UModelTree::GetAllNode()
 {
-	TArray<FModelTreeNode*> NodeArray = TArray<FModelTreeNode*>();
+	TArray<TSharedPtr<FModelTreeNode>> NodeArray = TArray<TSharedPtr<FModelTreeNode>>();
 
 	//添加根节点
-	NodeArray.Add(&RootNode);
+	NodeArray.Add(RootNode);
 
-	if (!RootNode.ChildNodes.IsEmpty())
+	if (!RootNode->ChildNodes.IsEmpty())
 	{
-		NodeArray.Append(SearchAllChildNode(RootNode.Model->GetClass()));
+		NodeArray.Append(SearchAllChildNode(RootNode->Model->GetClass()));
 	}
 
 	return NodeArray;

@@ -38,6 +38,12 @@ UBaseModel* UModelLibrary::CreateModel(UObject* WorldContextObject, TSubclassOf<
 		return nullptr;
 	}
 
+	if (SearchModel(WorldContextObject, ParentModelClass) == nullptr)
+	{
+		UE_LOG(ExtensionLog, Warning, TEXT("[%s] CreateModel(): 不存在父模块：ParentModelClass: %s, ModelClass: %s !"), *WorldContextObject->GetName(), *ParentModelClass->GetName(), *ModelClass->GetName());
+		return nullptr;
+	}
+	
 	if (SearchModel(WorldContextObject, ModelClass) != nullptr)
 	{
 		UE_LOG(ExtensionLog, Warning, TEXT("[%s] CreateModel(): 已存在 %s 模块！"), *WorldContextObject->GetName(), *ModelClass->GetName());
@@ -49,6 +55,12 @@ UBaseModel* UModelLibrary::CreateModel(UObject* WorldContextObject, TSubclassOf<
 	{
 		//创建 Model 对象
 		UBaseModel* NewModel = NewObject<UBaseModel>(WorldContextObject, ModelClass);
+
+		//持久化 Model 对象，保证不被回收
+		ModelManager->ModelTree->PersistenceArray.Add(NewModel);
+
+		//在不对此对象进行引用时保证其不被回收
+		//NewModel->AddToRoot();
 
 		//将 Model 对象添加到 全局 ModelTree 中
 		ModelManager->ModelTree->Add(ParentModelClass, NewModel);
@@ -73,7 +85,7 @@ UBaseModel* UModelLibrary::SearchModel(UObject* WorldContextObject, TSubclassOf<
 	UModelManager* ModelManager = GetModelManager(WorldContextObject);
 	if (CheckModelManagerAndOutLog(WorldContextObject, ModelManager, "SearchModel"))
 	{
-		FModelTreeNode* TreeNode = ModelManager->ModelTree->SearchNode(ModelClass, &ModelManager->ModelTree->RootNode);
+		TSharedPtr<FModelTreeNode> TreeNode = ModelManager->ModelTree->SearchNode(ModelClass, ModelManager->ModelTree->RootNode);
 
 		if (TreeNode == nullptr)
 		{
@@ -92,7 +104,7 @@ TArray<UBaseModel*> UModelLibrary::SearchChildFirstLevelModel(UObject* WorldCont
 	if (CheckModelManagerAndOutLog(WorldContextObject, ModelManager, "SearchModel"))
 	{
 		//子节点为空
-		TArray<FModelTreeNode*> ChildNodeArray = ModelManager->ModelTree->SearchNode(ModelClass, &ModelManager->ModelTree->RootNode)->ChildNodes;
+		TArray<TSharedPtr<FModelTreeNode>> ChildNodeArray = ModelManager->ModelTree->SearchNode(ModelClass, ModelManager->ModelTree->RootNode)->ChildNodes;
 		if (ChildNodeArray.IsEmpty())
 		{
 			return TArray<UBaseModel*>();
@@ -118,7 +130,7 @@ TArray<UBaseModel*> UModelLibrary::SearchAllChildModel(UObject* WorldContextObje
 	if (CheckModelManagerAndOutLog(WorldContextObject, ModelManager, "SearchModel"))
 	{
 		//子节点为空
-		TArray<FModelTreeNode*> ChildNodeArray = ModelManager->ModelTree->SearchAllChildNode(ModelClass);
+		TArray<TSharedPtr<FModelTreeNode>> ChildNodeArray = ModelManager->ModelTree->SearchAllChildNode(ModelClass);
 		if (ChildNodeArray.IsEmpty())
 		{
 			return ModelArray;

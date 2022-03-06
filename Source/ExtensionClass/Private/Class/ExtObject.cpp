@@ -3,6 +3,8 @@
 
 #include "Class/ExtObject.h"
 
+#include "Utilities/ExtLog.h"
+
 void UExtObject::PostInitProperties()
 {
 	Super::PostInitProperties();
@@ -16,13 +18,6 @@ void UExtObject::PostInitProperties()
 
 UWorld* UExtObject::GetWorld() const
 {
-	//if (GetOuter())
-	//{
-	//	return GetOuter()->GetWorld();
-	//}
-
-	//return nullptr;
-
 	// CDO objects do not belong to a world
 	// If the actors outer is destroyed or unreachable we are shutting down and the world should be nullptr
 	if (!HasAnyFlags(RF_ClassDefaultObject) && ensureMsgf(GetOuter(), TEXT("Actor: %s has a null OuterPrivate in AActor::GetWorld()"), *GetFullName())
@@ -40,10 +35,12 @@ void UExtObject::OnBegin()
 
 void UExtObject::OnEnd()
 {
-
+	EndPlay();
 }
 
 void UExtObject::DestroyObject()
 {
-	this->MarkPendingKill();
+	OnEnd();
+
+	this->ConditionalBeginDestroy();
 }

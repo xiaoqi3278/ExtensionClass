@@ -21,13 +21,17 @@ public:
 	virtual UWorld* GetWorld() const override;
 
 protected:
+	/** 类初始化时调用 */
 	virtual void OnBegin();
+	/** 使用 DestroyObject() 回收当前对象时调用 */
 	virtual void OnEnd();
 
 public:
+	/** 蓝图重写，类初始化时调用 */
 	UFUNCTION(BlueprintImplementableEvent)
 	void BeginPlay();
 
+	/** 蓝图重写，使用 DestroyObject() 回收当前对象时调用 */
 	UFUNCTION(BlueprintImplementableEvent)
 	void EndPlay();
 

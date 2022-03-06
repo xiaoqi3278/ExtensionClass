@@ -13,7 +13,9 @@ UCLASS()
 class EXTENSIONCLASS_API UBaseModel : public UExtObject
 {
 	GENERATED_BODY()
-	
+
 protected:
 	virtual void OnBegin() override;
+
+	virtual void OnEnd() override;
 };
