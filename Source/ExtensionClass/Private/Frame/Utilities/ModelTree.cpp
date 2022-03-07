@@ -12,7 +12,7 @@ void UModelTree::OnBegin()
 	Super::OnBegin();
 
 	//构造默认根节点
-	DefaultModel = NewObject<UBaseModel>();
+	DefaultModel = NewObject<UBaseModel>(this);
 	//RootNode = FModelTreeNode(DefaultModel);
 	RootNode = MakeShareable(new FModelTreeNode(DefaultModel));
 }

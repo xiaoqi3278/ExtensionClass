@@ -14,6 +14,11 @@ void UExtObject::PostInitProperties()
 	{
 		OnBegin();
 	}
+
+	 //Вызываем только в игре, когда есть мир. В редакторе BeginPlay вызван не будет
+	//机翻：只在游戏世界中调用，不会在编辑器中调用。
+	//if (GetOuter() && GetOuter()->GetWorld())
+	//	OnBegin();
 }
 
 UWorld* UExtObject::GetWorld() const
@@ -26,6 +31,11 @@ UWorld* UExtObject::GetWorld() const
 		return GetOuter()->GetWorld();
 	}
 	return nullptr;
+
+	// Возвращаем ссылку на мир из владельца объекта, если не работаем редакторе.
+	//if (!FApp::IsGame()) return nullptr;
+	//else if (GetOuter()) return GetOuter()->GetWorld();
+	//else return nullptr;
 }
 
 void UExtObject::OnBegin()
@@ -42,9 +52,8 @@ void UExtObject::DestroyObject()
 {
 	OnEnd();
 	
-	//调用绑定回调
 	OnExtObjectDestroyed.Broadcast(Index);
 
-	//标记为需要被GC
+	//标记为需要被回收，所有引用置空
 	this->MarkPendingKill();
 }
