@@ -57,7 +57,7 @@ UBaseModel* UModelLibrary::CreateModel(UObject* WorldContextObject, TSubclassOf<
 		UBaseModel* NewModel = NewObject<UBaseModel>(WorldContextObject, ModelClass);
 
 		//持久化 Model 对象，保证不被回收
-		ModelManager->ModelTree->PersistenceArray.Add(NewModel);
+		//ModelManager->ModelTree->PersistenceArray.Add(NewModel);
 
 		//在不对此对象进行引用时保证其不被回收
 		//NewModel->AddToRoot();
@@ -105,7 +105,8 @@ TArray<UBaseModel*> UModelLibrary::SearchChildFirstLevelModel(UObject* WorldCont
 	{
 		//子节点为空
 		TArray<TSharedPtr<FModelTreeNode>> ChildNodeArray = ModelManager->ModelTree->SearchNode(ModelClass, ModelManager->ModelTree->RootNode)->ChildNodes;
-		if (ChildNodeArray.IsEmpty())
+		//if (ChildNodeArray.IsEmpty())
+		if (!ChildNodeArray.IsValidIndex(0))
 		{
 			return TArray<UBaseModel*>();
 		}
@@ -131,7 +132,8 @@ TArray<UBaseModel*> UModelLibrary::SearchAllChildModel(UObject* WorldContextObje
 	{
 		//子节点为空
 		TArray<TSharedPtr<FModelTreeNode>> ChildNodeArray = ModelManager->ModelTree->SearchAllChildNode(ModelClass);
-		if (ChildNodeArray.IsEmpty())
+		//if (ChildNodeArray.IsEmpty())
+		if (!ChildNodeArray.IsValidIndex(0))
 		{
 			return ModelArray;
 		}

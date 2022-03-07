@@ -55,6 +55,13 @@ void UExtCheatManager::ShowAllModelName()
 	UE_LOG(ExtensionLog, Log, TEXT("-----------------------------------------------ModelEnd----------------------------------------------"));
 }
 
+void UExtCheatManager::ShowAllModelNum()
+{
+	UModelTree* ModelTree = UModelLibrary::GetModelManager(this)->ModelTree;
+
+	UE_LOG(ExtensionLog, Log, TEXT("The Num Of All Model: %d"), ModelTree->GetAllNode().Num());
+}
+
 void UExtCheatManager::ShowTest()
 {
 	UModelTree* Test = UModelLibrary::GetModelManager(this)->ModelTree;

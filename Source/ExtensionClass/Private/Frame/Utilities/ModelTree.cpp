@@ -83,8 +83,9 @@ TSharedPtr<FModelTreeNode> UModelTree::SearchNode(TSubclassOf<UBaseModel> Search
 void UModelTree::DeleteNode(TSubclassOf<UBaseModel> DeleteNodeClass)
 {
 	TSharedPtr<FModelTreeNode> DeleteNode = SearchNode(DeleteNodeClass, RootNode);
+	
 
-	if (DeleteNode->Model == nullptr)
+	if (DeleteNode == nullptr || DeleteNode->Model == nullptr)
 	{
 		return;
 	}
@@ -95,8 +96,25 @@ void UModelTree::DeleteNode(TSubclassOf<UBaseModel> DeleteNodeClass)
 		this->DeleteNode(Itr->Model->GetClass());
 	}
 
-	DeleteNode->Model->DestroyObject();
-	DeleteNode->Model = nullptr;
+	//删除父节点中的引用
+	TSharedPtr<FModelTreeNode> ParentNode = SearchNode(DeleteNode->ParentModelClass, RootNode);
+	//for (auto& Itr : ParentNode->ChildNodes)
+	//{
+	//	if (UKismetMathLibrary::EqualEqual_ClassClass(Itr->Model->GetClass(), DeleteNodeClass))
+	//	{
+	//		Itr->Model->DestroyObject();
+	//		ParentNode->ChildNodes.Remove(Itr);
+	//	}
+	//}
+	for (int32 i = 0; i < ParentNode->ChildNodes.Num(); i++)
+	{
+		if (UKismetMathLibrary::EqualEqual_ClassClass(ParentNode->ChildNodes[i]->Model->GetClass(), DeleteNodeClass))
+		{
+			//回收节点保存的 Model 对象
+			ParentNode->ChildNodes[i]->Model->DestroyObject();
+			ParentNode->ChildNodes.RemoveAt(i);
+		}
+	}
 }
 
 TArray<TSharedPtr<FModelTreeNode>> UModelTree::SearchAllChildNode(TSubclassOf<UBaseModel> SearchModelClass)
@@ -110,7 +128,8 @@ TArray<TSharedPtr<FModelTreeNode>> UModelTree::SearchAllChildNode(TSubclassOf<UB
 	}
 
 	//若子节点为空
-	if (SearchNode(SearchModelClass, RootNode)->ChildNodes.IsEmpty())
+	//if (SearchNode(SearchModelClass, RootNode)->ChildNodes.IsEmpty())
+	if (!SearchNode(SearchModelClass, RootNode)->ChildNodes.IsValidIndex(0))
 	{
 		return NodeArray;
 	}
@@ -118,7 +137,8 @@ TArray<TSharedPtr<FModelTreeNode>> UModelTree::SearchAllChildNode(TSubclassOf<UB
 	for (auto& Itr : SearchNode(SearchModelClass, RootNode)->ChildNodes)
 	{
 		NodeArray.Add(Itr);
-		if (!Itr->ChildNodes.IsEmpty())
+		//if (!Itr->ChildNodes.IsEmpty())
+		if (Itr->ChildNodes.IsValidIndex(0))
 		{
 			NodeArray.Append(SearchAllChildNode(Itr->Model->GetClass()));
 		}
@@ -134,7 +154,8 @@ TArray<TSharedPtr<FModelTreeNode>> UModelTree::GetAllNode()
 	//添加根节点
 	NodeArray.Add(RootNode);
 
-	if (!RootNode->ChildNodes.IsEmpty())
+	//if (!RootNode->ChildNodes.IsEmpty())
+	if (RootNode->ChildNodes.IsValidIndex(0))
 	{
 		NodeArray.Append(SearchAllChildNode(RootNode->Model->GetClass()));
 	}

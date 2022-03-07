@@ -34,6 +34,10 @@ public:
 	UFUNCTION(Exec)
 	void ShowAllModelName();
 
+	/** 输出所有的 Model	数量到日志中 */
+	UFUNCTION(Exec)
+	void ShowAllModelNum();
+
 	UFUNCTION(Exec)
 	void ShowTest();
 };

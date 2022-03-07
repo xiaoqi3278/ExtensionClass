@@ -41,6 +41,10 @@ void UExtObject::OnEnd()
 void UExtObject::DestroyObject()
 {
 	OnEnd();
+	
+	//调用绑定回调
+	OnExtObjectDestroyed.Broadcast(Index);
 
-	this->ConditionalBeginDestroy();
+	//标记为需要被GC
+	this->MarkPendingKill();
 }

@@ -18,4 +18,6 @@ protected:
 	virtual void OnBegin() override;
 
 	virtual void OnEnd() override;
+
+public:
 };

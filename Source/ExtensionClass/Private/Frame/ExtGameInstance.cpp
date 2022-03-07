@@ -12,6 +12,6 @@ void UExtGameInstance::Init()
 {
 	WidgetManager = NewObject<UWidgetManager>(this);
 	ModelManager = NewObject<UModelManager>(this);
-	//UBaseModel* MainModel = NewObject<UBaseModel>();
-	//ModelTree = NewObject<UModelTree>(MainModel);
+
+	Super::Init();
 }

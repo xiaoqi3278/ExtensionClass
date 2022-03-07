@@ -16,7 +16,7 @@
 class UBaseModel;
 
 /** 单个节点结构 */
-struct FModelTreeNode
+struct EXTENSIONCLASS_API FModelTreeNode : public FGCObject
 {
 	//节点包含的模块
 	UBaseModel* Model = nullptr;
@@ -47,6 +47,13 @@ struct FModelTreeNode
 		ParentModelClass = TempParentModelClass;
 		Model = TempModel;
 		ChildNodes = TArray<TSharedPtr<FModelTreeNode>>();
+	}
+
+protected:
+
+	virtual void AddReferencedObjects(FReferenceCollector& Collector) override
+	{
+		Collector.AddReferencedObject(Model);
 	}
 };
 
