@@ -12,6 +12,7 @@
 
 class UBaseModel;
 class UModelTree;
+class UBaseCommand;
 
 UCLASS()
 class EXTENSIONCLASS_API UModelManager : public UExtObject
@@ -26,7 +27,11 @@ public:
 	UPROPERTY(BlueprintReadOnly)
 	UModelTree* ModelTree;
 
+public:
+
 	/** 蓝图重写, ModelManager 开始事件 */
 	UFUNCTION(BlueprintImplementableEvent)
 	void ModelManagerBegin();
+
+	void NotifyAllModelToProcesssingCommand(UBaseCommand* Command);
 };

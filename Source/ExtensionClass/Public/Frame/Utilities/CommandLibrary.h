@@ -23,7 +23,7 @@ public:
 	/** 
 	* 获取 CommandManager
 	*/
-	UFUNCTION(BlueprintCallable, meta = (WorldContext = "WorldContextObject"), Category = "ExtensionClass|Frame|CommandLibrary")
+	UFUNCTION(BlueprintPure, meta = (WorldContext = "WorldContextObject"), Category = "ExtensionClass|Frame|CommandLibrary")
 	static UCommandManager* GetCommandManager(UObject* WorldContextObject);
 
 	/** 
@@ -38,10 +38,19 @@ public:
 	static bool CheckCommandManagerAndOutLog(UObject* WorldContextObject, UCommandManager* Manager, FString FunctionName);
 
 	/**
-	* 创建一个命令并加入命令队列
+	* 创建一个命令
 	* 
 	* @param	CommandClass	命令类型
+	* @return					创建的命令
+	*/
+	UFUNCTION(BlueprintCallable, meta = (WorldContext = "WorldContextObject", DeterminesOutputType = "CommandClass"), Category = "ExtensionClass|Frame|CommandLibrary")
+	static UBaseCommand* CreateCommand(UObject* WorldContextObject, TSubclassOf<UBaseCommand> CommandClass);
+
+	/**
+	* 将一个命令加入命令队列, 并通知所有模块对命令进行处理
+	* 
+	* @param	Command			要入队的命令
 	*/
 	UFUNCTION(BlueprintCallable, meta = (WorldContext = "WorldContextObject"), Category = "ExtensionClass|Frame|CommandLibrary")
-	static void CreateCommand(UObject* WorldContextObject, TSubclassOf<UBaseCommand> CommandClass);
+	static void EnqueueCommand(UObject* WorldContextObject, UBaseCommand* Command);
 };

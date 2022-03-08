@@ -10,6 +10,8 @@
  * 
  */
 
+class UBaseCommand;
+
 DECLARE_DYNAMIC_MULTICAST_DELEGATE_OneParam(FOnModelDestroyed, TSubclassOf<UBaseModel>, ModelClass);
 
 UCLASS()
@@ -33,4 +35,8 @@ public:
 	/** 蓝图重写, 模块开始事件 */
 	UFUNCTION(BlueprintImplementableEvent)
 	void ModelBegin();
+
+	/** 蓝图重写, 处理新增的命令 */
+	UFUNCTION(BlueprintImplementableEvent)
+	void ProcessingCommand(UBaseCommand* Command);
 };

@@ -21,4 +21,12 @@ public:
 
 	/** 命令队列 */
 	TQueue<UBaseCommand*> CommandQueue;
+
+public:
+
+	/** 添加一个命令到命令队列, 并通知 ModelManager 对命令进行处理 */
+	void EnqueueCommand(UBaseCommand* Command);
+
+	/** 移除命令队列中的一个命令 */
+	void DequeueCommand(UBaseCommand* Command);
 };
