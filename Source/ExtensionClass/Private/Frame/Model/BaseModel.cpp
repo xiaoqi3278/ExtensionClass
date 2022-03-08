@@ -13,4 +13,6 @@ void UBaseModel::OnBegin()
 void UBaseModel::OnEnd()
 {
 	Super::OnEnd();
+
+	OnModelDestroyed.Broadcast(this->GetClass());
 }

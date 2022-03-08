@@ -15,10 +15,12 @@ void UExtObject::PostInitProperties()
 		OnBegin();
 	}
 
-	 //Вызываем только в игре, когда есть мир. В редакторе BeginPlay вызван не будет
+	/*
+	//Вызываем только в игре, когда есть мир. В редакторе BeginPlay вызван не будет
 	//机翻：只在游戏世界中调用，不会在编辑器中调用。
-	//if (GetOuter() && GetOuter()->GetWorld())
-	//	OnBegin();
+	if (GetOuter() && GetOuter()->GetWorld())
+		OnBegin();
+	*/
 }
 
 UWorld* UExtObject::GetWorld() const
@@ -32,10 +34,12 @@ UWorld* UExtObject::GetWorld() const
 	}
 	return nullptr;
 
+	/*
 	// Возвращаем ссылку на мир из владельца объекта, если не работаем редакторе.
-	//if (!FApp::IsGame()) return nullptr;
-	//else if (GetOuter()) return GetOuter()->GetWorld();
-	//else return nullptr;
+	if (!FApp::IsGame()) return nullptr;
+	else if (GetOuter()) return GetOuter()->GetWorld();
+	else return nullptr;
+	*/
 }
 
 void UExtObject::OnBegin()

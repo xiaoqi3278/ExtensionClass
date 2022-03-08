@@ -6,15 +6,28 @@
 #include "Runtime/Engine/Classes/Kismet/KismetMathLibrary.h"
 
 #include "Frame/Model/BaseModel.h"
+#include "Frame/Utilities/ModelLibrary.h"
+#include "Frame/Manager/ModelManager.h"
 
 void UModelTree::OnBegin()
 {
 	Super::OnBegin();
 
-	//构造默认根节点
+	// 构造默认根节点
 	DefaultModel = NewObject<UBaseModel>(this);
 	//RootNode = FModelTreeNode(DefaultModel);
 	RootNode = MakeShareable(new FModelTreeNode(DefaultModel));
+
+	//UModelManager* ModelManager = Cast<UModelManager>(this->GetOuter());
+	//if (ModelManager != nullptr)
+	//{
+	//	ModelManager->ModelManagerBegin();
+	//}
+	//UModelManager* ModelManager = UModelLibrary::GetModelManager(this);
+	//if (ModelManager != nullptr)
+	//{
+	//	ModelManager->ModelManagerBegin();
+	//}
 }
 
 FModelTreeNode UModelTree::CreateNode(UBaseModel* Model)
@@ -32,7 +45,7 @@ void UModelTree::Add(TSubclassOf<UBaseModel> ParentModelClass, UBaseModel* Model
 	TSharedPtr<FModelTreeNode> NewNode = MakeShareable(new FModelTreeNode(Model, ParentModelClass));
 	TSharedPtr<FModelTreeNode> ParentNode = SearchNode(ParentModelClass, RootNode);
 
-	//若指定的父节点类型为空则默认添加到根节点下
+	// 若指定的父节点类型为空则默认添加到根节点下
 	if (ParentModelClass == nullptr)
 	{
 		RootNode->ChildNodes.Add(NewNode);
@@ -83,7 +96,7 @@ TSharedPtr<FModelTreeNode> UModelTree::SearchNode(TSubclassOf<UBaseModel> Search
 void UModelTree::DeleteNode(TSubclassOf<UBaseModel> DeleteNodeClass)
 {
 	TSharedPtr<FModelTreeNode> DeleteNode = SearchNode(DeleteNodeClass, RootNode);
-	
+	TSharedPtr<FModelTreeNode> ParentNode = SearchNode(DeleteNode->ParentModelClass, RootNode);
 
 	if (DeleteNode == nullptr || DeleteNode->Model == nullptr)
 	{
@@ -95,26 +108,13 @@ void UModelTree::DeleteNode(TSubclassOf<UBaseModel> DeleteNodeClass)
 	{
 		this->DeleteNode(Itr->Model->GetClass());
 	}
-
-	//删除父节点中的引用
-	TSharedPtr<FModelTreeNode> ParentNode = SearchNode(DeleteNode->ParentModelClass, RootNode);
-	//for (auto& Itr : ParentNode->ChildNodes)
+	//for (int32 i = 0; i < DeleteNode->ChildNodes.Num(); i++)
 	//{
-	//	if (UKismetMathLibrary::EqualEqual_ClassClass(Itr->Model->GetClass(), DeleteNodeClass))
-	//	{
-	//		Itr->Model->DestroyObject();
-	//		ParentNode->ChildNodes.Remove(Itr);
-	//	}
+	//	this->DeleteNode(DeleteNode->ChildNodes[i]->Model->GetClass());
 	//}
-	for (int32 i = 0; i < ParentNode->ChildNodes.Num(); i++)
-	{
-		if (UKismetMathLibrary::EqualEqual_ClassClass(ParentNode->ChildNodes[i]->Model->GetClass(), DeleteNodeClass))
-		{
-			//回收节点保存的 Model 对象
-			ParentNode->ChildNodes[i]->Model->DestroyObject();
-			ParentNode->ChildNodes.RemoveAt(i);
-		}
-	}
+
+	ParentNode->ChildNodes.RemoveSingle(DeleteNode);
+	DeleteNode->Model->DestroyObject();
 }
 
 TArray<TSharedPtr<FModelTreeNode>> UModelTree::SearchAllChildNode(TSubclassOf<UBaseModel> SearchModelClass)

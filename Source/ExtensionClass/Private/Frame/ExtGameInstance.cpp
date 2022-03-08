@@ -7,11 +7,22 @@
 #include "Frame/Utilities/ModelTree.h"
 #include "Frame/Model/BaseModel.h"
 #include "Frame/Manager/ModelManager.h"
+#include "Utilities/ExtLog.h"
+#include "Frame/Manager/CommandManager.h"
 
 void UExtGameInstance::Init()
 {
-	WidgetManager = NewObject<UWidgetManager>(this);
-	ModelManager = NewObject<UModelManager>(this);
-
 	Super::Init();
+
+	WidgetManager = NewObject<UWidgetManager>(this);
+	ModelManager = NewObject<UModelManager>(this, ModelManagerClass);
+	CommandManager = NewObject<UCommandManager>(this);
+
+	//ModelManager->ModelManagerBegin();
 }
+
+void UExtGameInstance::OnStart()
+{
+	ModelManager->ModelManagerBegin();
+}
+

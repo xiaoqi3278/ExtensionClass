@@ -39,11 +39,11 @@ public:
 	virtual void PostInitProperties() override;
 
 public:
-	/** 蓝图重写，类初始化时调用 */
+	/** 蓝图重写, 类初始化时调用 */
 	UFUNCTION(BlueprintImplementableEvent)
 	void BeginPlay();
 
-	/** 蓝图重写，使用 DestroyObject() 回收当前对象时调用 */
+	/** 蓝图重写, 使用 DestroyObject() 回收当前对象时调用 */
 	UFUNCTION(BlueprintImplementableEvent)
 	void EndPlay();
 

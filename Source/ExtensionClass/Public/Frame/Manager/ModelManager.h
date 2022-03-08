@@ -25,4 +25,8 @@ public:
 	/** 全局 Model 树 */
 	UPROPERTY(BlueprintReadOnly)
 	UModelTree* ModelTree;
+
+	/** 蓝图重写, ModelManager 开始事件 */
+	UFUNCTION(BlueprintImplementableEvent)
+	void ModelManagerBegin();
 };

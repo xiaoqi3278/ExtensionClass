@@ -8,8 +8,7 @@
 
 void UModelManager::OnBegin()
 {
-	Super::OnBegin();
-
-	UE_LOG(ExtensionLog, Warning, TEXT("ModelManager Created!"));
 	ModelTree = NewObject<UModelTree>(this);
+
+	Super::OnBegin();
 }

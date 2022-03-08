@@ -7,11 +7,18 @@
 #include "CommandManager.generated.h"
 
 /**
- * 
+ * Command 管理器
  */
+
+class UBaseCommand;
+
 UCLASS()
 class EXTENSIONCLASS_API UCommandManager : public UExtObject
 {
 	GENERATED_BODY()
 	
+public:
+
+	/** 命令队列 */
+	TQueue<UBaseCommand*> CommandQueue;
 };

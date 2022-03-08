@@ -65,6 +65,9 @@ UBaseModel* UModelLibrary::CreateModel(UObject* WorldContextObject, TSubclassOf<
 		//将 Model 对象添加到 全局 ModelTree 中
 		ModelManager->ModelTree->Add(ParentModelClass, NewModel);
 
+		//调用模块开始事件
+		NewModel->ModelBegin();
+
 		return NewModel;
 	}
 

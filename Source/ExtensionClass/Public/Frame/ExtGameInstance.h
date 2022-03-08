@@ -12,6 +12,8 @@
 
 class UWidgetManager;
 class UModelManager;
+class UCommandManager;
+
 class UModelTree;
 
 UCLASS()
@@ -21,17 +23,24 @@ class EXTENSIONCLASS_API UExtGameInstance : public UGameInstance
 	
 public:
 	/** 全局 WidgetManager */
-	UPROPERTY()
+	UPROPERTY(BlueprintReadOnly)
 	UWidgetManager* WidgetManager;
 
 	/** 全局 ModelManager */
-	UPROPERTY()
+	UPROPERTY(BlueprintReadOnly)
 	UModelManager* ModelManager;
 
-	/** 全局 Model 树 */
-	//UPROPERTY()
-	//UModelTree* ModelTree;
+	/** 全局 CommandManger */
+	UPROPERTY(BlueprintReadOnly)
+	UCommandManager* CommandManager;
+
+	/** 默认创建的 ModelManager 类型 */
+	UPROPERTY(EditDefaultsOnly)
+	TSubclassOf<UModelManager> ModelManagerClass;
 
 public:
 	virtual void Init() override;
+
+protected:
+	virtual void OnStart() override;
 };
