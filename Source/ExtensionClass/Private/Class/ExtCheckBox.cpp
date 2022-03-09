@@ -14,6 +14,8 @@ void UExtCheckBox::SynchronizeProperties()
 	if (bDontManage)
 		return;
 
+	this->SetCheckedState(bIsDefaultChecked ? ECheckBoxState::Checked : ECheckBoxState::Unchecked);
+
 	//初始化
 	if (!IsDesignTime() && bIsInitial)
 		OnInitialized();
@@ -32,6 +34,15 @@ void UExtCheckBox::OnInitialized()
 	UCheckBoxLibrary::AddCheckBox(this, MainKey, ChildKey, this);
 
 	Manager = UCheckBoxLibrary::GetCheckBoxManager(this);
+
+	if (bIsDefaultChecked && Manager != nullptr)
+	{
+		if (bExecuteBindOnDefaultChecked)
+		{
+			UCheckBoxLibrary::SetOneExtCheckedState(this, this->MainKey, this->ChildKey, ECheckBoxState::Checked);
+		}
+		Manager->CheckBoxMainMap.Find(MainKey)->CheckedChildKey = this->ChildKey;
+	}
 }
 
 void UExtCheckBox::GenerateToIndex(FString GenerateKey)
@@ -70,8 +81,18 @@ void UExtCheckBox::SetExtCheckedState(ECheckBoxState ExtCheckedState)
 		return;
 	}
 
+	if (Manager == nullptr)
+	{
+		UE_LOG(ExtensionLog, Warning, TEXT("[%s] %s(): CheckBoxManage Get Faild!"), *this->GetName(), *"SetExtCheckedState");
+		return;
+	}
+
 	if (ExtCheckedState == ECheckBoxState::Unchecked && bAlwaysChecked)
 	{
+		//始终选中
+		this->SetCheckedState(ECheckBoxState::Checked);
+		Manager->CheckBoxMainMap.Find(MainKey)->CheckedChildKey = "ChildKey_NULL";
+
 		if (bExecuteBindOnReChecked)
 		{
 			OnExtCheckStateChanged.Broadcast(true, Index);
@@ -83,11 +104,12 @@ void UExtCheckBox::SetExtCheckedState(ECheckBoxState ExtCheckedState)
 
 	SetCheckedState(ExtCheckedState);
 
-	if (Manager == nullptr)
-	{
-		return;
-	}
 	Manager->CheckBoxMainMap.Find(MainKey)->CheckedChildKey = ExtCheckedState == ECheckBoxState::Checked ? ChildKey : "ChildKey_NULL";
+	if (bAlwaysChecked)
+	{
+		Manager->CheckBoxMainMap.Find(MainKey)->CheckedChildKey = "ChildKey_NULL";
+	}
+
 
 	//调用 OnExtCheckedStateChanged 绑定的事件
 	OnExtCheckStateChanged.Broadcast(ExtCheckedState == ECheckBoxState::Checked ? true : false, Index);

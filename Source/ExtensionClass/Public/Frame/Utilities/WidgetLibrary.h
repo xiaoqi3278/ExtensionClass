@@ -29,8 +29,8 @@ public:
 	static UWidgetManager* GetWidgetManager(UObject* WorldContextObject);
 
 	/** 创建 Widget */
-	UFUNCTION(BlueprintCallable, meta = (WorldContext = "WorldContextObject"), Category = "ExtensionClass|Frame|WidgetLibrary")
-	static void CreateExtWidget(UObject* WorldContextObject, TSubclassOf<UExtUserWidget> WidgetClass);
+	UFUNCTION(BlueprintCallable, meta = (WorldContext = "WorldContextObject", DeterminesOutputType = "WidgetClass"), Category = "ExtensionClass|Frame|WidgetLibrary")
+	static UExtUserWidget* CreateExtWidget(UObject* WorldContextObject, TSubclassOf<UExtUserWidget> WidgetClass);
 
 	/**
 	 * 将一个 ExtUserWidget 对象加入 WidgetManager 中的 WidgetMap 中

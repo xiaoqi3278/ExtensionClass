@@ -47,7 +47,7 @@ AActor* UActorLibrary::GetSingleActor(UObject* WorldContextObject, FString Actor
 {
 	UActorManager* ActorManager = GetActorManager(WorldContextObject);
 
-	if (CheckAndOutLog(WorldContextObject, ActorManager, "AddSingleActor"))
+	if (CheckAndOutLog(WorldContextObject, ActorManager, "GetSingleActor"))
 	{
 		return nullptr;
 	}
@@ -60,7 +60,7 @@ void UActorLibrary::AddGroupActor(UObject* WorldContextObject, FString MainKey, 
 {
 	UActorManager* ActorManager = GetActorManager(WorldContextObject);
 
-	if (CheckAndOutLog(WorldContextObject, ActorManager, "AddSingleActor"))
+	if (CheckAndOutLog(WorldContextObject, ActorManager, "AddGroupActor"))
 	{
 		return;
 	}
@@ -72,11 +72,50 @@ AActor* UActorLibrary::GetGroupActor(UObject* WorldContextObject, FString MainKe
 {
 	UActorManager* ActorManager = GetActorManager(WorldContextObject);
 
-	if (CheckAndOutLog(WorldContextObject, ActorManager, "AddSingleActor"))
+	if (CheckAndOutLog(WorldContextObject, ActorManager, "GetGroupActor"))
 	{
 		return nullptr;
 	}
 
 	FActorGroup TempActorGroup = ActorManager->GroupActorMainMap.FindRef(MainKey);
 	return TempActorGroup.GroupActorChildMap.FindRef(ChildKey);
+}
+
+void UActorLibrary::AddActorGroup(UObject* WorldContextObject, bool bObjectNameAsChildKey, FString MainKey, TArray<FString> ChildKeyArray, TArray<AActor*> ActorArray)
+{
+	UActorManager* ActorManager = GetActorManager(WorldContextObject);
+
+	if (CheckAndOutLog(WorldContextObject, ActorManager, "AddActorGroup"))
+	{
+		return;
+	}
+
+	FActorGroup* TempActorGroup = &(ActorManager->GroupActorMainMap.FindOrAdd(MainKey));
+
+	for (int32 i = 0; i < ActorArray.Num(); i++)
+	{
+		//如果为空，则默认使用 GetName() 作为 ChildKey
+		if (ChildKeyArray[i] == "")
+		{
+			ChildKeyArray[i] = ActorArray[i]->GetName();
+		}
+		TempActorGroup->GroupActorChildMap.Emplace(bObjectNameAsChildKey ? ActorArray[i]->GetName() : ChildKeyArray[i], ActorArray[i]);
+	}
+}
+
+TArray<AActor*> UActorLibrary::GetActorGroup(UObject* WorldContextObject, FString MainKey)
+{
+	UActorManager* ActorManager = GetActorManager(WorldContextObject);
+
+	if (CheckAndOutLog(WorldContextObject, ActorManager, "GetActorGroup") || !ActorManager->GroupActorMainMap.Contains(MainKey))
+	{
+		return TArray<AActor*>();
+	}
+
+	TMap<FString, AActor*> TempGroupMap = ActorManager->GroupActorMainMap.Find(MainKey)->GroupActorChildMap;
+
+	TArray<AActor*> ActorArray = TArray<AActor*>();
+	TempGroupMap.GenerateValueArray(ActorArray);
+
+	return ActorArray;
 }

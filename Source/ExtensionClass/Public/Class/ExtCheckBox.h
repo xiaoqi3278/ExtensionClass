@@ -42,6 +42,14 @@ private:
 	UPROPERTY(EditAnywhere, Category = "ExtensionClass|Utilities")
 	FString GenerateIndex;
 
+	/** 默认是否是选中状态 */
+	UPROPERTY(EditAnywhere, Category = "ExtensionClass|Control")
+	bool bIsDefaultChecked;
+
+	/** 默认选中时是否调用绑定事件 */
+	UPROPERTY(EditAnywhere, Category = "ExtensionClass|Control")
+	bool bExecuteBindOnDefaultChecked;
+
 	/** 是否加入到 CheckBoxManager 中进行管理 */
 	UPROPERTY(EditAnywhere, Category = "ExtensionClass|Control")
 	bool bDontManage;

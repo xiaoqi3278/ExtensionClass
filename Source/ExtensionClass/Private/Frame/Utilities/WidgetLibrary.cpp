@@ -24,12 +24,14 @@ UWidgetManager* UWidgetLibrary::GetWidgetManager(UObject* WorldContextObject)
 	return nullptr;
 }
 
-void UWidgetLibrary::CreateExtWidget(UObject* WorldContextObject, TSubclassOf<UExtUserWidget> WidgetClass)
+UExtUserWidget* UWidgetLibrary::CreateExtWidget(UObject* WorldContextObject, TSubclassOf<UExtUserWidget> WidgetClass)
 {
 	if (WidgetClass != nullptr)
 	{
-		CreateWidget<UExtUserWidget>(UGameplayStatics::GetPlayerController(WorldContextObject, 0), WidgetClass);
+		return CreateWidget<UExtUserWidget>(UGameplayStatics::GetPlayerController(WorldContextObject, 0), WidgetClass);
 	}
+
+	return nullptr;
 }
 
 void UWidgetLibrary::AddToWidgetManager(UObject* WorldContextObject, FString WidgetKey, UExtUserWidget* Widget)
