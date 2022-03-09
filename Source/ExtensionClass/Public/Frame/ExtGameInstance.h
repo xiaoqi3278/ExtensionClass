@@ -11,6 +11,8 @@
  */
 
 class UWidgetManager;
+class UCheckBoxManager;
+class UActorManager;
 class UModelManager;
 class UCommandManager;
 
@@ -25,6 +27,14 @@ public:
 	/** 全局 WidgetManager */
 	UPROPERTY(BlueprintReadOnly)
 	UWidgetManager* WidgetManager;
+
+	/** 全局 CheckBoxManager */
+	UPROPERTY(BlueprintReadOnly)
+	UCheckBoxManager* CheckBoxManager;
+
+	/** 全局 UActorManager */
+	UPROPERTY(BlueprintReadOnly)
+	UActorManager* ActorManager;
 
 	/** 全局 ModelManager */
 	UPROPERTY(BlueprintReadOnly)

@@ -39,4 +39,8 @@ public:
 	/** 蓝图重写, 处理新增的命令 */
 	UFUNCTION(BlueprintImplementableEvent)
 	void ProcessingCommand(UBaseCommand* Command);
+
+	/** 获取此对象的类型 */
+	UFUNCTION(BlueprintPure)
+	TSubclassOf<UBaseModel> GetSelfClass();
 };

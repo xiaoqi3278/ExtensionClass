@@ -104,14 +104,14 @@ void UModelTree::DeleteNode(TSubclassOf<UBaseModel> DeleteNodeClass)
 	}
 
 	//删除子节点
-	for (auto& Itr : DeleteNode->ChildNodes)
-	{
-		this->DeleteNode(Itr->Model->GetClass());
-	}
-	//for (int32 i = 0; i < DeleteNode->ChildNodes.Num(); i++)
+	//for (auto& Itr : DeleteNode->ChildNodes)
 	//{
-	//	this->DeleteNode(DeleteNode->ChildNodes[i]->Model->GetClass());
+	//	this->DeleteNode(Itr->Model->GetClass());
 	//}
+	for (int32 i = 0; i < DeleteNode->ChildNodes.Num(); i++)
+	{
+		this->DeleteNode(DeleteNode->ChildNodes[i]->Model->GetClass());
+	}
 
 	ParentNode->ChildNodes.RemoveSingle(DeleteNode);
 	DeleteNode->Model->DestroyObject();

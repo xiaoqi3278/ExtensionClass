@@ -8,52 +8,62 @@
 #include "Manager/CheckBoxManager.h"
 #include "Class/ExtCheckBox.h"
 #include "Utilities/ExtLog.h"
+#include "Frame/ExtGameInstance.h"
 
 void UCheckBoxLibrary::TestFunction(UObject* WorldContextObject)
 {
-	ACheckBoxManager* Manager = GetCheckBoxManager(WorldContextObject);
+	UCheckBoxManager* Manager = GetCheckBoxManager(WorldContextObject);
 
 	CheckAndOutLog(WorldContextObject, Manager, "<MainKey_NULL>", "<ChildKey_NULL>", 1, "TestFunctin");
 }
 
-ACheckBoxManager* UCheckBoxLibrary::GetCheckBoxManager(UObject* WorldContextObject)
+UCheckBoxManager* UCheckBoxLibrary::GetCheckBoxManager(UObject* WorldContextObject)
 {
-	AActor* TempManager = UGameplayStatics::GetActorOfClass(WorldContextObject, ACheckBoxManager::StaticClass());
+	//UCheckBoxManager* CheckBoxManager = Cast<UExtGameInstance>(UGameplayStatics::GetGameInstance(WorldContextObject))->CheckBoxManager;
+	UExtGameInstance* GameInstance = Cast<UExtGameInstance>(UGameplayStatics::GetGameInstance(WorldContextObject));
 
-	if (TempManager == nullptr)
+	if (GameInstance == nullptr)
+	{
 		return nullptr;
+	}
 
-	return Cast<ACheckBoxManager>(TempManager);
+	return GameInstance->CheckBoxManager;
 }
 
 TMap<FString, FCheckBoxGroup> UCheckBoxLibrary::GetCheckBoxMainMap(UObject* WorldContextObject)
 {
-	ACheckBoxManager* Manager = GetCheckBoxManager(WorldContextObject);
+	UCheckBoxManager* Manager = GetCheckBoxManager(WorldContextObject);
 	
 	if (CheckAndOutLog(WorldContextObject, Manager, "", "", 1, "GetCheckBoxMainMap"))
+	{
 		return TMap<FString, FCheckBoxGroup>();
+	}
 
 	return Manager->CheckBoxMainMap;
 }
 
 TMap<FString, UExtCheckBox*> UCheckBoxLibrary::GetCheckBoxChildMap(UObject* WorldContextObject, FString MainKey)
 {
-	ACheckBoxManager* Manager = GetCheckBoxManager(WorldContextObject);
+	UCheckBoxManager* Manager = GetCheckBoxManager(WorldContextObject);
 
 	//if (Manager == nullptr || !Manager->CheckBoxMainMap.Contains(MainKey))
 	if (CheckAndOutLog(WorldContextObject, Manager, MainKey, "", 2, "GetCheckBoxChildMap"))
+	{
 		return TMap<FString, UExtCheckBox*>();
+	}
 
 	return Manager->CheckBoxMainMap.Find(MainKey)->CheckBoxChildMap;
 }
 
 TArray<UExtCheckBox*> UCheckBoxLibrary::GetCheckBoxArray(UObject* WorldContextObject, FString MainKey)
 {
-	ACheckBoxManager* Manager = GetCheckBoxManager(WorldContextObject);
+	UCheckBoxManager* Manager = GetCheckBoxManager(WorldContextObject);
 
 	//如果不存在 MainKey 对应的组则直接返回空数组
 	if (Manager == nullptr || !Manager->CheckBoxMainMap.Contains(MainKey))
+	{
 		return TArray<UExtCheckBox*>();
+	}
 
 	TArray<UExtCheckBox*> TempArr;
 	(Manager->CheckBoxMainMap.Find(MainKey))->CheckBoxChildMap.GenerateValueArray(TempArr);
@@ -63,17 +73,19 @@ TArray<UExtCheckBox*> UCheckBoxLibrary::GetCheckBoxArray(UObject* WorldContextOb
 
 UExtCheckBox* UCheckBoxLibrary::GetCheckBox(UObject* WorldContextObject, FString MainKey, FString ChildKey)
 {
-	ACheckBoxManager* Manager = GetCheckBoxManager(WorldContextObject);
+	UCheckBoxManager* Manager = GetCheckBoxManager(WorldContextObject);
 
 	//如果不存在 MainKey 对应的组则直接返回空指针
 	if (Manager == nullptr || !Manager->CheckBoxMainMap.Contains(MainKey))
+	{
 		return nullptr;
+	}
 
 	//如果不存在 ChildKey 对应的 ExtCheckBox FindRef 则会返回空指针
 	return Manager->CheckBoxMainMap.Find(MainKey)->CheckBoxChildMap.FindRef(ChildKey);
 }
 
-bool UCheckBoxLibrary::CheckAndOutLog(UObject* WorldContextObject, ACheckBoxManager* Manager, FString MainKey, FString ChildKey, int32 Index, FString FunctionName)
+bool UCheckBoxLibrary::CheckAndOutLog(UObject* WorldContextObject, UCheckBoxManager* Manager, FString MainKey, FString ChildKey, int32 Index, FString FunctionName)
 {
 	//Manager 是否有效
 	if (Index > 0 && Manager == nullptr)
@@ -101,7 +113,7 @@ bool UCheckBoxLibrary::CheckAndOutLog(UObject* WorldContextObject, ACheckBoxMana
 
 void UCheckBoxLibrary::AddCheckBox(UObject* WorldContextObject, FString MainKey, FString ChildKey, UExtCheckBox* InCheckBox)
 {
-	ACheckBoxManager* Manager = GetCheckBoxManager(WorldContextObject);
+	UCheckBoxManager* Manager = GetCheckBoxManager(WorldContextObject);
 
 	if (Manager == nullptr)
 	{
@@ -115,22 +127,28 @@ void UCheckBoxLibrary::AddCheckBox(UObject* WorldContextObject, FString MainKey,
 
 int32 UCheckBoxLibrary::GetCheckBoxIndex(UObject* WorldContextObject, FString MainKey, FString ChildKey)
 {
-	ACheckBoxManager* Manager = GetCheckBoxManager(WorldContextObject);
+	UCheckBoxManager* Manager = GetCheckBoxManager(WorldContextObject);
 
 	//查找失败
 	if (Manager == nullptr)
+	{
 		return -2;
+	}
 
 	//不存在对应组
 	if (!Manager->CheckBoxMainMap.Contains(MainKey))
+	{
 		return -1;
+	}
 
 	int32 index = 0;
 	for (auto& Itr : Manager->CheckBoxMainMap.Find(MainKey)->CheckBoxChildMap)
 	{
 		++index;
 		if (Itr.Key == ChildKey)
+		{
 			return index;
+		}
 	}
 
 	//不存在对应 ExtCheckBox
@@ -139,14 +157,18 @@ int32 UCheckBoxLibrary::GetCheckBoxIndex(UObject* WorldContextObject, FString Ma
 
 UExtCheckBox* UCheckBoxLibrary::GetCheckedOne(UObject* WorldContextObject, FString MainKey)
 {
-	ACheckBoxManager* Manager = GetCheckBoxManager(WorldContextObject);
+	UCheckBoxManager* Manager = GetCheckBoxManager(WorldContextObject);
 
 	if (CheckAndOutLog(WorldContextObject, Manager, MainKey, "", 2, "GetCheckedOne"))
+	{
 		return nullptr;
+	}
 
 	FString CheckedKey = Manager->CheckBoxMainMap.Find(MainKey)->CheckedChildKey;
 	if (CheckedKey != "ChildKey_NULL")
+	{
 		return (Manager->CheckBoxMainMap.Find(MainKey)->CheckBoxChildMap).FindRef(CheckedKey);
+	}
 
 	UE_LOG(ExtensionLog, Warning, TEXT("[%s] GetCheckedOne: %s Does Not Have CheckedOne!"), *WorldContextObject->GetFName().ToString(), *MainKey);
 	return nullptr;
@@ -154,10 +176,12 @@ UExtCheckBox* UCheckBoxLibrary::GetCheckedOne(UObject* WorldContextObject, FStri
 
 TArray<FString> UCheckBoxLibrary::GetMainKeyArray(UObject* WorldContextObject)
 {
-	ACheckBoxManager* Manager = GetCheckBoxManager(WorldContextObject);
+	UCheckBoxManager* Manager = GetCheckBoxManager(WorldContextObject);
 
 	if (Manager == nullptr)
+	{
 		return TArray<FString>();
+	}
 
 	TArray<FString> StringArr;
 	Manager->CheckBoxMainMap.GenerateKeyArray(StringArr);
@@ -167,37 +191,45 @@ TArray<FString> UCheckBoxLibrary::GetMainKeyArray(UObject* WorldContextObject)
 
 TArray<FString> UCheckBoxLibrary::GetChildKeyArray(UObject* WorldContextObject, FString MainKey)
 {
-	ACheckBoxManager* Manager = GetCheckBoxManager(WorldContextObject);
+	UCheckBoxManager* Manager = GetCheckBoxManager(WorldContextObject);
 
 	//有效性判断
 	if (CheckAndOutLog(WorldContextObject, Manager, MainKey, "", 2, "GetChildKeyArray"))
+	{
 		return TArray<FString>();
+	}
 
 	TArray<FString> ChildKeyArray;
 	for (auto& Itr : Manager->CheckBoxMainMap.Find(MainKey)->CheckBoxChildMap)
+	{
 		ChildKeyArray.Add(Itr.Value->ChildKey);
+	}
 
 	return ChildKeyArray;
 }
 
 FString UCheckBoxLibrary::GetCheckedChildKey(UObject* WorldContextObject, FString MainKey)
 {
-	ACheckBoxManager* Manager = GetCheckBoxManager(WorldContextObject);
+	UCheckBoxManager* Manager = GetCheckBoxManager(WorldContextObject);
 
 	//有效性判断
 	if (CheckAndOutLog(WorldContextObject, Manager, MainKey, "", 2, "GetCheckedChildKey"))
+	{
 		return "";
+	}
 
 	return Manager->CheckBoxMainMap.Find(MainKey)->CheckedChildKey;
 }
 
 void UCheckBoxLibrary::SetOneExtChecked(UObject* WorldContextObject, FString MainKey, FString ChildKey)
 {
-	ACheckBoxManager* Manager = GetCheckBoxManager(WorldContextObject);
+	UCheckBoxManager* Manager = GetCheckBoxManager(WorldContextObject);
 	
 	//有效性判断
 	if (CheckAndOutLog(WorldContextObject, Manager, MainKey, ChildKey, 3, "SetOneExtChecked"))
+	{
 		return;
+	}
 
 	UExtCheckBox* CheckedOne = GetCheckedOne(WorldContextObject, MainKey);
 	UExtCheckBox* NeedCheckedOne = GetCheckBox(WorldContextObject, MainKey, ChildKey);
@@ -207,7 +239,8 @@ void UCheckBoxLibrary::SetOneExtChecked(UObject* WorldContextObject, FString Mai
 	{
 		
 	}
-	else {
+	else
+	{
 		CheckedOne->SetExtCheckedState(ECheckBoxState::Unchecked);
 	}
 
@@ -218,18 +251,32 @@ void UCheckBoxLibrary::SetOneExtChecked(UObject* WorldContextObject, FString Mai
 	}
 
 	NeedCheckedOne->SetExtCheckedState(ECheckBoxState::Checked);
+	Manager->CheckBoxMainMap.Find(MainKey)->CheckedChildKey = ChildKey;
+
 }
 
 void UCheckBoxLibrary::SetOneExtCheckedState(UObject* WorldContextObject, FString MainKey, FString ChildKey, ECheckBoxState State)
 {
 	UExtCheckBox* CheckedOne = GetCheckedOne(WorldContextObject, MainKey);
-
-	//已选中的取消选中
-	if (CheckedOne != nullptr)
-		CheckedOne->SetExtCheckedState(ECheckBoxState::Unchecked);
-
 	UExtCheckBox* CheckBox = GetCheckBox(WorldContextObject, MainKey, ChildKey);
 
+	UCheckBoxManager* Manager = GetCheckBoxManager(WorldContextObject);
+	if (CheckAndOutLog(WorldContextObject, Manager, MainKey, ChildKey, 2, "SetOneExtCheckedState"))
+	{
+		return;
+	}
+
+	//已选中的取消选中
+	if (CheckedOne != nullptr && State != ECheckBoxState::Unchecked)
+	{
+		//Manager->CheckBoxMainMap.Find(MainKey)->CheckedChildKey = "ChildKey_NULL";
+		CheckedOne->SetExtCheckedState(ECheckBoxState::Unchecked);
+		
+	}
+
 	if (CheckBox != nullptr)
+	{
+		//Manager->CheckBoxMainMap.Find(MainKey)->CheckedChildKey = ChildKey;
 		CheckBox->SetExtCheckedState(State);
+	}
 }

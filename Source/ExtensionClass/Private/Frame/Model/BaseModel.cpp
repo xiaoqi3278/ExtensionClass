@@ -17,3 +17,8 @@ void UBaseModel::OnEnd()
 	OnModelDestroyed.Broadcast(this->GetClass());
 	
 }
+
+TSubclassOf<UBaseModel> UBaseModel::GetSelfClass()
+{
+	return this->GetClass();
+}

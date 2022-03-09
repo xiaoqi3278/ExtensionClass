@@ -13,7 +13,7 @@
  * 
  */
 
-class ACheckBoxManager;
+class UCheckBoxManager;
 
 UCLASS()
 class EXTENSIONCLASS_API UCheckBoxLibrary : public UBlueprintFunctionLibrary
@@ -27,7 +27,7 @@ public:
 
 	/** 获取 CheckBox 管理类 */
 	UFUNCTION(BlueprintPure, meta = (WorldContext = "WorldContextObject"), Category = "ExtensionClass|CheckBoxLibrary")
-	static ACheckBoxManager* GetCheckBoxManager(UObject* WorldContextObject);
+	static UCheckBoxManager* GetCheckBoxManager(UObject* WorldContextObject);
 
 	/** 获取主键值对 */
 	UFUNCTION(BlueprintPure, meta = (WorldContext = "WorldContextObject"), Category = "ExtensionClass|CheckBoxLibrary")
@@ -49,7 +49,7 @@ public:
 	 * 检查是否存在 MainKey 或 ChildKey 如不存在则输出到日志
 	 * 
 	 * @param WorldContextObject 世界上下文
-	 * @param Manager 需要进行判断的 ACheckBoxManager 类
+	 * @param Manager 需要进行判断的 UCheckBoxManager 类
 	 * @param MainKey 判断此主键是否在传入的 Manager 中存在
 	 * @param ChildKey 此子键是否在传入的 Manager.MainKey 中存在
 	 * @param Index 传入的参数从 Manager 到 ChildKey 需要判断的个数
@@ -58,7 +58,7 @@ public:
 	 * @return 如不包含其中的 MainKey 或 ChildKey 则返回 true
 	 */
 	UFUNCTION()
-	static bool CheckAndOutLog(UObject* WorldContextObject, ACheckBoxManager* Manager, FString MainKey, FString ChildKey, int32 Index, FString FunctionName);
+	static bool CheckAndOutLog(UObject* WorldContextObject, UCheckBoxManager* Manager, FString MainKey, FString ChildKey, int32 Index, FString FunctionName);
 
 	/**
 	 * 将一个 ExtCheckBox 添加到组中

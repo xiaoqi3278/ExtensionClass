@@ -11,7 +11,7 @@
  * 
  */
 
-class ACheckBoxManager;
+class UCheckBoxManager;
 
 DECLARE_DYNAMIC_MULTICAST_DELEGATE_TwoParams(FExtOnCheckStateChanged, bool, bIsChecked, int32, Index);
 
@@ -56,7 +56,7 @@ private:
 
 	/** CheckBox 管理类 */
 	UPROPERTY()
-	ACheckBoxManager* Manager;
+	UCheckBoxManager* Manager;
 
 	/** 是否是需要初始化 */
 	UPROPERTY()
@@ -66,19 +66,6 @@ public:
 	/** Applies all properties to the live slot if possible. */
 	virtual void SynchronizeProperties() override;
 
-public:
-	/**
-	 * 点击当前 ExtCheckBox 时调用
-	 * 
-	 * @param bIsChecked 点击后当前 ExtCheckBox 的状态
-	 */
-	UFUNCTION()
-	void OnClick(bool bIsChecked);
-
-	/** 设置当前 ExtCheckBox 的选中状态，会调用 OnExtCheckStateChanged 绑定的事件 */
-	UFUNCTION(BlueprintCallable)
-	void SetExtCheckedState(ECheckBoxState ExtCheckedState);
-
 private:
 	/** ExtCheckBox 初始化 */
 	UFUNCTION()
@@ -87,5 +74,18 @@ private:
 	/** 根据输入的字符自动生成 Index */
 	UFUNCTION()
 	void GenerateToIndex(FString GenerateKey);
+
+public:
+	/**
+	 * 点击当前 ExtCheckBox 时调用
+	 *
+	 * @param bIsChecked 点击后当前 ExtCheckBox 的状态
+	 */
+	UFUNCTION()
+	void OnClick(bool bIsChecked);
+
+	/** 设置当前 ExtCheckBox 的选中状态，会调用 OnExtCheckStateChanged 绑定的事件 */
+	UFUNCTION(BlueprintCallable)
+	void SetExtCheckedState(ECheckBoxState ExtCheckedState);
 };
 

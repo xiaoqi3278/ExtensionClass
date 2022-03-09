@@ -3,7 +3,7 @@
 #pragma once
 
 #include "CoreMinimal.h"
-#include "GameFramework/Actor.h"
+#include "Class/ExtObject.h"
 #include "CheckBoxManager.generated.h"
 
 class UExtCheckBox;
@@ -23,13 +23,9 @@ struct FCheckBoxGroup
 };
 
 UCLASS()
-class EXTENSIONCLASS_API ACheckBoxManager : public AActor
+class EXTENSIONCLASS_API UCheckBoxManager : public UExtObject
 {
 	GENERATED_BODY()
-	
-public:	
-	// Sets default values for this actor's properties
-	ACheckBoxManager();
 
 public:
 	/** 用于管理 ExtCheckBox */

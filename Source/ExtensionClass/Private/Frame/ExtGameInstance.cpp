@@ -4,6 +4,8 @@
 #include "Frame/ExtGameInstance.h"
 
 #include "Frame/Manager/WidgetManager.h"
+#include "ExtensionClass/Public/Manager/CheckBoxManager.h"
+#include "ExtensionClass/Public/Manager/ActorManager.h"
 #include "Frame/Utilities/ModelTree.h"
 #include "Frame/Model/BaseModel.h"
 #include "Frame/Manager/ModelManager.h"
@@ -15,6 +17,8 @@ void UExtGameInstance::Init()
 	Super::Init();
 
 	WidgetManager = NewObject<UWidgetManager>(this);
+	CheckBoxManager = NewObject<UCheckBoxManager>(this);
+	ActorManager = NewObject<UActorManager>(this);
 	ModelManager = NewObject<UModelManager>(this, ModelManagerClass);
 	CommandManager = NewObject<UCommandManager>(this);
 
