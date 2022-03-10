@@ -92,8 +92,13 @@ public:
 	UFUNCTION()
 	void OnClick(bool bIsChecked);
 
-	/** 设置当前 ExtCheckBox 的选中状态，会调用 OnExtCheckStateChanged 绑定的事件 */
+	/**
+	* 设置当前 ExtCheckBox 的选中状态，会调用 OnExtCheckStateChanged 绑定的事件
+	* 
+	* @param	ExtCheckedState		设置的选中状态
+	* @param	PureSet				仅设置状态和 CheckBoxGroup 中的选中状态
+	*/
 	UFUNCTION(BlueprintCallable)
-	void SetExtCheckedState(ECheckBoxState ExtCheckedState);
+	void SetExtCheckedState(ECheckBoxState ExtCheckedState, bool bPureSet);
 };
 

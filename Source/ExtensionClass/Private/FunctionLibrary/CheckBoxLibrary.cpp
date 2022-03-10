@@ -241,7 +241,7 @@ void UCheckBoxLibrary::SetOneExtChecked(UObject* WorldContextObject, FString Mai
 	}
 	else
 	{
-		CheckedOne->SetExtCheckedState(ECheckBoxState::Unchecked);
+		CheckedOne->SetExtCheckedState(ECheckBoxState::Unchecked, true);
 	}
 
 	if (NeedCheckedOne == nullptr)
@@ -250,7 +250,7 @@ void UCheckBoxLibrary::SetOneExtChecked(UObject* WorldContextObject, FString Mai
 		return;
 	}
 
-	NeedCheckedOne->SetExtCheckedState(ECheckBoxState::Checked);
+	NeedCheckedOne->SetExtCheckedState(ECheckBoxState::Checked, true);
 	Manager->CheckBoxMainMap.Find(MainKey)->CheckedChildKey = ChildKey;
 
 }
@@ -270,13 +270,13 @@ void UCheckBoxLibrary::SetOneExtCheckedState(UObject* WorldContextObject, FStrin
 	if (CheckedOne != nullptr && State != ECheckBoxState::Unchecked)
 	{
 		//Manager->CheckBoxMainMap.Find(MainKey)->CheckedChildKey = "ChildKey_NULL";
-		CheckedOne->SetExtCheckedState(ECheckBoxState::Unchecked);
+		CheckedOne->SetExtCheckedState(ECheckBoxState::Unchecked, true);
 		
 	}
 
 	if (CheckBox != nullptr)
 	{
 		//Manager->CheckBoxMainMap.Find(MainKey)->CheckedChildKey = ChildKey;
-		CheckBox->SetExtCheckedState(State);
+		CheckBox->SetExtCheckedState(State, true);
 	}
 }

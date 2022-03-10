@@ -3,7 +3,9 @@
 
 #include "Class/ExtActor.h"
 
-
+#include "ExtensionClass/Public/Manager/ActorManager.h"
+#include "ExtensionClass/Public/FunctionLibrary/ActorLibrary.h"
+#include "Utilities/ExtLog.h"
 
 // Sets default values
 AExtActor::AExtActor()
@@ -18,6 +20,34 @@ void AExtActor::BeginPlay()
 {
 	Super::BeginPlay();
 	
+	UActorManager* ActorManager = UActorLibrary::GetActorManager(this);
+
+	if (ActorManager == nullptr)
+	{
+		UE_LOG(ExtensionLog, Warning, TEXT("[%s] BeginPlay(): GetActorManager Failed!"), *this->GetName());
+		return;
+	}
+
+	if (bIsSingleActor)
+	{
+		if (ActorKey == "")
+		{
+			ActorKey = this->GetName();
+		}
+		ActorManager->SingleActorMap.Emplace(ActorKey, this->GetOwner());
+	}
+	else
+	{
+		if (MainKey == "")
+		{
+			return;
+		}
+		if (ChildKey == "")
+		{
+			ChildKey = this->GetName();
+		}
+		ActorManager->GroupActorMainMap.FindOrAdd(MainKey).GroupActorChildMap.Emplace(ChildKey, this);
+	}
 }
 
 // Called every frame

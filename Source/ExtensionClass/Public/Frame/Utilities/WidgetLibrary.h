@@ -57,8 +57,8 @@ public:
 	* 
 	* @return	查找到的 ExtUserWidget，可为 nullptr
 	*/
-	UFUNCTION(BlueprintCallable, meta = (WorldContext = "WorldContextObject"), Category = "ExtensionClass|Frame|WidgetLibrary")
-	static UExtUserWidget* GetWidget(UObject* WorldContextObject, FString WidgetKey);
+	UFUNCTION(BlueprintPure, meta = (WorldContext = "WorldContextObject", DeterminesOutputType = "WidgetClass"), Category = "ExtensionClass|Frame|WidgetLibrary")
+	static UExtUserWidget* GetWidget(UObject* WorldContextObject, FString WidgetKey, TSubclassOf<UExtUserWidget> WidgetClass);
 
 	/**
 	* 查找 WidgetManager 中 某个 WidgetGroup 对应的一个 ExtUserWidget

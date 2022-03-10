@@ -60,7 +60,7 @@ public:
 	* @param	ModelClass		查找的 Model 类型
 	* @return					查找到的 Model，若无则返回空
 	*/
-	UFUNCTION(BlueprintPure, meta = (WorldContext = "WorldContextObject"), Category = "ExtensionClass|Frame|ModelLibrary")
+	UFUNCTION(BlueprintPure, meta = (WorldContext = "WorldContextObject", DeterminesOutputType = "ModelClass"), Category = "ExtensionClass|Frame|ModelLibrary")
 	static UBaseModel* SearchModel(UObject* WorldContextObject, TSubclassOf<UBaseModel> ModelClass);
 
 	/**

@@ -33,10 +33,22 @@ void UExtActorComponent::BeginPlay()
 
 	if (bIsSingleActor)
 	{
+		if (ActorKey == "")
+		{
+			ActorKey = this->GetName();
+		}
 		ActorManager->SingleActorMap.Emplace(ActorKey, this->GetOwner());
 	}
 	else
 	{
+		if (MainKey == "")
+		{
+			return;
+		}
+		if (ChildKey == "")
+		{
+			ChildKey = this->GetOwner()->GetName();
+		}
 		ActorManager->GroupActorMainMap.FindOrAdd(MainKey).GroupActorChildMap.Emplace(ChildKey, this->GetOwner());
 	}
 }

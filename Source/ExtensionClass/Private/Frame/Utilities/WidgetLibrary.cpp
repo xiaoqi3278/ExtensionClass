@@ -54,7 +54,7 @@ void UWidgetLibrary::AddToWidgetManagerOfGroup(UObject* WorldContextObject, FStr
 	}
 }
 
-UExtUserWidget* UWidgetLibrary::GetWidget(UObject* WorldContextObject, FString WidgetKey)
+UExtUserWidget* UWidgetLibrary::GetWidget(UObject* WorldContextObject, FString WidgetKey, TSubclassOf<UExtUserWidget> WidgetClass)
 {
 	UWidgetManager* WidgetManager = GetWidgetManager(WorldContextObject);
 
@@ -112,7 +112,7 @@ void UWidgetLibrary::RemoveWidget(UObject* WorldContextObject, FString WidgetKey
 {
 	UWidgetManager* WidgetManager = GetWidgetManager(WorldContextObject);
 
-	UExtUserWidget* Widget = GetWidget(WorldContextObject, WidgetKey);
+	UExtUserWidget* Widget = GetWidget(WorldContextObject, WidgetKey, WidgetManager->GetClass());
 
 	if (WidgetManager != nullptr && Widget != nullptr)
 	{
