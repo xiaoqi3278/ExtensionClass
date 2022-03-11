@@ -43,4 +43,8 @@ public:
 	/** 获取此对象的类型 */
 	UFUNCTION(BlueprintPure)
 	TSubclassOf<UBaseModel> GetSelfClass();
+
+	/** 获取此 Model 的父 Model	类型 */
+	UFUNCTION(BlueprintPure)
+	TSubclassOf<UBaseModel> GetParentClass();
 };
