@@ -31,8 +31,8 @@ TSubclassOf<UBaseModel> UBaseModel::GetParentClass()
 	UModelTree* TempModelTree = UModelLibrary::GetModelManager(this)->ModelTree;
 	if (TempModelTree == nullptr)
 	{
-		//UE_LOG(ExtensionLog, Warning, TEXT("[%s] GetParentClass(): »ñÈ¡ ModelTree Ê§°Ü"), *this->GetName());
-		UE_LOG(ExtensionLog, Warning, TEXT("[%s] GetParentClass(): Ö¸¶¨µÄ´´½¨ÀàÐÍÎª¿Õ£¡"), *this->GetName());
+		//UE_LOG(ExtensionLog, Warning, TEXT("[%s] GetParentClass(): èŽ·å– ModelTree å¤±è´¥"), *this->GetName());
+		UE_LOG(ExtensionLog, Warning, TEXT("[%s] GetParentClass(): æŒ‡å®šçš„åˆ›å»ºç±»åž‹ä¸ºç©ºï¼"), *this->GetName());
 
 		return nullptr;
 	}
@@ -40,8 +40,8 @@ TSubclassOf<UBaseModel> UBaseModel::GetParentClass()
 	TSharedPtr<FModelTreeNode> TempNode = TempModelTree->SearchNode(this->GetClass(), TempModelTree->RootNode);
 	if (TempNode == nullptr)
 	{
-		//UE_LOG(ExtensionLog, Warning, TEXT("[%s] GetParentClass(): ModelTree ÖÐ²»´æÔÚ°üº¬ %s µÄ½Úµã"), *this->GetName(), *this->GetClass()->GetName());
-		UE_LOG(ExtensionLog, Warning, TEXT("[%s] GetParentClass(): ModelTree ÖÐ²»´æÔÚ°üº¬ %s µÄ½Úµã"), *this->GetName(), *(this->GetClass())->GetName());
+		//UE_LOG(ExtensionLog, Warning, TEXT("[%s] GetParentClass(): ModelTree ä¸­ä¸å­˜åœ¨åŒ…å« %s çš„èŠ‚ç‚¹"), *this->GetName(), *this->GetClass()->GetName());
+		//UE_LOG(ExtensionLog, Warning, TEXT("[%s] GetParentClass(): ModelTree ä¸­ä¸å­˜åœ¨åŒ…å« %s çš„èŠ‚ç‚¹"), *this->GetName(), *(this->GetClass())->GetName());
 		return nullptr;
 	}
 	
