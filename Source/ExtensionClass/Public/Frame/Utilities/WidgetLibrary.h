@@ -25,7 +25,7 @@ class EXTENSIONCLASS_API UWidgetLibrary : public UBlueprintFunctionLibrary
 	
 public:
 	/** 获取 WidgetManager */
-	UFUNCTION(BlueprintCallable, meta = (WorldContext = "WorldContextObject"), Category = "ExtensionClass|Frame|WidgetLibrary")
+	UFUNCTION(BlueprintPure, meta = (WorldContext = "WorldContextObject"), Category = "ExtensionClass|Frame|WidgetLibrary")
 	static UWidgetManager* GetWidgetManager(UObject* WorldContextObject);
 
 	/** 创建 Widget */
@@ -66,8 +66,8 @@ public:
 	* @param WidgetMainKey		用作查找 WidgetGroup 的键
 	* @param WidgetChildKey		用作查找 WidgetGroup 中对应的一个 ExtUserWidget 的键
 	*/
-	UFUNCTION(BlueprintCallable, meta = (WorldContext = "WorldContextObject"), Category = "ExtensionClass|Frame|WidgetLibrary")
-	static UExtUserWidget* GetOneWidgetOfGroup(UObject* WorldContextObject, FString WidgetMainKey, FString WidgetChildKey);
+	UFUNCTION(BlueprintPure, meta = (WorldContext = "WorldContextObject"), Category = "ExtensionClass|Frame|WidgetLibrary")
+	static UExtUserWidget* GetWidgetOfGroup(UObject* WorldContextObject, FString WidgetMainKey, FString WidgetChildKey);
 
 	/**
 	* 查找 WidgetManager 中对应的 FWidgetGroup
@@ -76,7 +76,7 @@ public:
 	* 
 	* @return	查找到的 WidgetGroup，可为默认构造的对象
 	*/
-	UFUNCTION(BlueprintCallable, meta = (WorldContext = "WorldContextObject"), Category = "ExtensionClass|Frame|WidgetLibrary")
+	UFUNCTION(BlueprintPure, meta = (WorldContext = "WorldContextObject"), Category = "ExtensionClass|Frame|WidgetLibrary")
 	static FWidgetGroup GetWidgetGroup(UObject* WorldContextObject, FString WidgetMainKey);
 
 	/**
@@ -84,10 +84,26 @@ public:
 	* 
 	* @param WidgetMainKey		用作查找的键
 	* 
-	* @return	查找道德 ExtUserWidget 数组，可为空
+	* @return	查找到的 ExtUserWidget 数组，可为空
 	*/
-	UFUNCTION(BlueprintCallable, meta = (WorldContext = "WorldContextObject"), Category = "ExtensionClass|Frame|WidgetLibrary")
-	static TArray<UExtUserWidget*> GetWidgetArray(UObject* WorldContextObject, FString WidgetMainKey);
+	UFUNCTION(BlueprintPure, meta = (WorldContext = "WorldContextObject"), Category = "ExtensionClass|Frame|WidgetLibrary")
+	static TArray<UExtUserWidget*> GetWidgetArrayOfGroup(UObject* WorldContextObject, FString WidgetMainKey);
+
+	/**
+	* 获取所有已被管理的 ExtUserWidget
+	* 
+	* @return	查找到的 ExtUserWidget 数组，可为空
+	*/
+	UFUNCTION(BlueprintPure, meta = (WorldContext = "WorldContextObject"), Category = "ExtensionClass|Fram|WidgetLibrary")
+	static TArray<UExtUserWidget*> GetAllWidget(UObject* WorldContextObject);
+
+	/** 
+	* 获取所有已被管理的 ExtUserWidget 的 Key
+	* 
+	* @return	查找到的 ExtUserWidget Key
+	*/
+	UFUNCTION(BlueprintPure, meta = (WorldContext = "WorldContextObject"), Category = "ExtensionClass|Frame|WidgetLibrary")
+	static TArray<FString> GetAllWidgetKey(UObject* WorldContextObject);
 
 	/** 
 	* 移除 WidgetManager 中 WidgetMap 对应的某一个 ExtUserWidget

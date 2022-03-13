@@ -11,6 +11,7 @@
 #include "Frame/Manager/ModelManager.h"
 #include "Utilities/ExtLog.h"
 #include "Frame/Manager/CommandManager.h"
+#include "..\..\Public\Frame\ExtGameInstance.h"
 
 void UExtGameInstance::Init()
 {
@@ -25,8 +26,13 @@ void UExtGameInstance::Init()
 	//ModelManager->ModelManagerBegin();
 }
 
-void UExtGameInstance::OnStart()
+void UExtGameInstance::CallModelManagerBegin()
 {
 	ModelManager->ModelManagerBegin();
+}
+
+void UExtGameInstance::OnStart()
+{
+	//ModelManager->ModelManagerBegin();
 }
 

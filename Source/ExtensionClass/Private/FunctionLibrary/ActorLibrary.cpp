@@ -8,6 +8,7 @@
 #include "Utilities/ExtLog.h"
 #include "Manager/ActorManager.h"
 #include "Frame/ExtGameInstance.h"
+#include "Class/ExtActor.h"
 
 UActorManager* UActorLibrary::GetActorManager(UObject* WorldContextObject)
 {
@@ -56,7 +57,7 @@ AActor* UActorLibrary::GetSingleActor(UObject* WorldContextObject, FString Actor
 	return ActorManager->SingleActorMap.FindRef(ActorKey);
 }
 
-void UActorLibrary::AddGroupActor(UObject* WorldContextObject, FString MainKey, FString ChildKey, AActor* Actor)
+void UActorLibrary::AddGroupActor(UObject* WorldContextObject, FString GroupKey, FString ActorKey, AActor* Actor)
 {
 	UActorManager* ActorManager = GetActorManager(WorldContextObject);
 
@@ -65,10 +66,10 @@ void UActorLibrary::AddGroupActor(UObject* WorldContextObject, FString MainKey, 
 		return;
 	}
 
-	ActorManager->GroupActorMainMap.FindOrAdd(MainKey).GroupActorChildMap.Emplace(ChildKey, Actor);
+	ActorManager->GroupActorMainMap.FindOrAdd(GroupKey).GroupActorChildMap.Emplace(ActorKey, Actor);
 }
 
-AActor* UActorLibrary::GetGroupActor(UObject* WorldContextObject, FString MainKey, FString ChildKey)
+AActor* UActorLibrary::GetGroupActor(UObject* WorldContextObject, FString GroupKey, FString ActorKey)
 {
 	UActorManager* ActorManager = GetActorManager(WorldContextObject);
 
@@ -77,11 +78,11 @@ AActor* UActorLibrary::GetGroupActor(UObject* WorldContextObject, FString MainKe
 		return nullptr;
 	}
 
-	FActorGroup TempActorGroup = ActorManager->GroupActorMainMap.FindRef(MainKey);
-	return TempActorGroup.GroupActorChildMap.FindRef(ChildKey);
+	FActorGroup TempActorGroup = ActorManager->GroupActorMainMap.FindRef(GroupKey);
+	return TempActorGroup.GroupActorChildMap.FindRef(ActorKey);
 }
 
-void UActorLibrary::AddActorGroup(UObject* WorldContextObject, bool bObjectNameAsChildKey, FString MainKey, TArray<FString> ChildKeyArray, TArray<AActor*> ActorArray)
+void UActorLibrary::AddActorGroup(UObject* WorldContextObject, bool bObjectNameAsActorKey, FString GroupKey, TArray<FString> ActorKeyArray, TArray<AActor*> ActorArray)
 {
 	UActorManager* ActorManager = GetActorManager(WorldContextObject);
 
@@ -90,32 +91,97 @@ void UActorLibrary::AddActorGroup(UObject* WorldContextObject, bool bObjectNameA
 		return;
 	}
 
-	FActorGroup* TempActorGroup = &(ActorManager->GroupActorMainMap.FindOrAdd(MainKey));
+	FActorGroup* TempActorGroup = &(ActorManager->GroupActorMainMap.FindOrAdd(GroupKey));
 
 	for (int32 i = 0; i < ActorArray.Num(); i++)
 	{
-		//如果为空，则默认使用 GetName() 作为 ChildKey
-		if (ChildKeyArray[i] == "")
+		//如果为空，则默认使用 GetName() 作为 ActorKey
+		if (ActorKeyArray[i] == "")
 		{
-			ChildKeyArray[i] = ActorArray[i]->GetName();
+			ActorKeyArray[i] = ActorArray[i]->GetName();
 		}
-		TempActorGroup->GroupActorChildMap.Emplace(bObjectNameAsChildKey ? ActorArray[i]->GetName() : ChildKeyArray[i], ActorArray[i]);
+		TempActorGroup->GroupActorChildMap.Emplace(bObjectNameAsActorKey ? ActorArray[i]->GetName() : ActorKeyArray[i], ActorArray[i]);
 	}
 }
 
-TArray<AActor*> UActorLibrary::GetActorGroup(UObject* WorldContextObject, FString MainKey)
+TArray<AActor*> UActorLibrary::GetActorGroup(UObject* WorldContextObject, FString GroupKey)
 {
 	UActorManager* ActorManager = GetActorManager(WorldContextObject);
 
-	if (CheckAndOutLog(WorldContextObject, ActorManager, "GetActorGroup") || !ActorManager->GroupActorMainMap.Contains(MainKey))
+	if (CheckAndOutLog(WorldContextObject, ActorManager, "GetActorGroup") || !ActorManager->GroupActorMainMap.Contains(GroupKey))
 	{
 		return TArray<AActor*>();
 	}
 
-	TMap<FString, AActor*> TempGroupMap = ActorManager->GroupActorMainMap.Find(MainKey)->GroupActorChildMap;
+	if (!ActorManager->GroupActorMainMap.Contains(GroupKey))
+	{
+		UE_LOG(ExtensionLog, Warning, TEXT("[%s] GetActorGroup(): ActorManager->GroupActorMainMap 不存在组: %s"), *WorldContextObject->GetName(), *GroupKey);
+		return TArray<AActor*>();
+	}
+
+	TMap<FString, AActor*> TempGroupMap = ActorManager->GroupActorMainMap.Find(GroupKey)->GroupActorChildMap;
 
 	TArray<AActor*> ActorArray = TArray<AActor*>();
 	TempGroupMap.GenerateValueArray(ActorArray);
 
 	return ActorArray;
+}
+
+void UActorLibrary::SetActorGroupHidden(UObject* WorldContextObject, FString GroupKey, bool bNewHidden, bool bCustomHidden)
+{
+	for (auto& Itr : GetActorGroup(WorldContextObject, GroupKey))
+	{
+		AExtActor* TempExtActor = Cast<AExtActor>(Itr);
+		if (bCustomHidden && TempExtActor != nullptr)    //如果是 AExtActor 类或其子类则调用自定义方法
+		{
+			TempExtActor->SetExtActorHiddenInGame(bNewHidden);
+		}
+		else
+		{
+			Itr->SetActorHiddenInGame(bNewHidden);
+		}
+	}
+}
+
+void UActorLibrary::SetGroupActorHidden(UObject* WorldContextObject, FString GroupKey, FString ActorKey, bool bNewHidden, bool bSetOtherHide, bool bCustomHidden)
+{
+	UActorManager* ActorManager = GetActorManager(WorldContextObject);
+
+	if (CheckAndOutLog(WorldContextObject, ActorManager, "GetActorGroup") || !ActorManager->GroupActorMainMap.Contains(GroupKey))
+	{
+		return;
+	}
+
+	TMap<FString, AActor*> ActorGroupMap = ActorManager->GroupActorMainMap.Find(GroupKey)->GroupActorChildMap;
+
+	for (auto& Itr : ActorGroupMap)
+	{
+		AExtActor* TempActor = Cast<AExtActor>(Itr.Value);
+
+		if (Itr.Key == ActorKey)
+		{
+			if (bCustomHidden && TempActor != nullptr)    //如果是 AExtActor 类或其子类则调用自定义方法
+			{
+				TempActor->SetExtActorHiddenInGame(bNewHidden);
+			}
+			else
+			{
+				Itr.Value->SetActorHiddenInGame(bNewHidden);
+			}
+		}
+		else
+		{
+			if (bSetOtherHide)		//将组内其它 Actor 隐藏
+			{
+				if (bCustomHidden && TempActor != nullptr)    //如果是 AExtActor 类或其子类则调用自定义方法
+				{
+					TempActor->SetExtActorHiddenInGame(true);
+				}
+				else
+				{
+					Itr.Value->SetActorHiddenInGame(true);
+				}
+			}
+		}
+	}
 }

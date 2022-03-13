@@ -23,4 +23,10 @@ public:
 	/** 用作查找的次键 */
 	UPROPERTY(BlueprintReadOnly, Category = "ExtensionClass|ExtUserWidget")
 	FString WidgetChildKey;
+
+public:
+
+	/** 移除 Widget 并标记为 IsPendingKill */
+	UFUNCTION(BlueprintCallable, Category = "ExtensionClass|ExtUserWidget")
+	void RemoveAndMarkGC();
 };

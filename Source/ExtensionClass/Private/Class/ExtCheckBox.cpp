@@ -121,6 +121,6 @@ void UExtCheckBox::SetExtCheckedState(ECheckBoxState ExtCheckedState, bool bPure
 	// bPureSet 为假时调用 OnExtCheckedStateChanged 绑定的事件
 	if (!bPureSet)
 	{
-		OnExtCheckStateChanged.Broadcast(ExtCheckedState == ECheckBoxState::Checked ? true : false, Index);
+		OnExtCheckStateChanged.Broadcast(ExtCheckedState == ECheckBoxState::Checked, Index);
 	}
 }

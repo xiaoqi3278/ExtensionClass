@@ -9,7 +9,7 @@
 /**
  * 
  */
-UCLASS()
+UCLASS(BlueprintType)
 class EXTENSIONCLASS_API UBaseCommand : public UExtObject
 {
 	GENERATED_BODY()

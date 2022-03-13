@@ -68,6 +68,8 @@ UBaseModel* UModelLibrary::CreateModel(UObject* WorldContextObject, TSubclassOf<
 		//调用模块开始事件
 		NewModel->ModelBegin();
 
+		UE_LOG(ExtensionLog, Log, TEXT("[%s] CreateModel(): 创建 Model: %s"), *WorldContextObject->GetName(), *ModelClass->GetName());
+
 		return NewModel;
 	}
 
@@ -80,6 +82,7 @@ void UModelLibrary::DestroyModel(UObject* WorldContextObject, TSubclassOf<UBaseM
 	if (CheckModelManagerAndOutLog(WorldContextObject, ModelManager, "DestroyModel"))
 	{
 		ModelManager->ModelTree->DeleteNode(ModelClass);
+		UE_LOG(ExtensionLog, Log, TEXT("[%s] DestroyModel(): 销毁 Model: %s"), *WorldContextObject->GetName(), *ModelClass->GetName());
 	}
 }
 

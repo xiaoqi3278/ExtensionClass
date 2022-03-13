@@ -3,3 +3,8 @@
 
 #include "Class/ExtUserWidget.h"
 
+void UExtUserWidget::RemoveAndMarkGC()
+{
+	this->RemoveFromParent();
+	this->MarkPendingKill();
+}

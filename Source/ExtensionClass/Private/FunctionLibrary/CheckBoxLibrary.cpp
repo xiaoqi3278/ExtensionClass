@@ -165,13 +165,13 @@ UExtCheckBox* UCheckBoxLibrary::GetCheckedOne(UObject* WorldContextObject, FStri
 	}
 
 	FString CheckedKey = Manager->CheckBoxMainMap.Find(MainKey)->CheckedChildKey;
-	if (CheckedKey != "ChildKey_NULL")
+	if (CheckedKey == "ChildKey_NULL")
 	{
-		return (Manager->CheckBoxMainMap.Find(MainKey)->CheckBoxChildMap).FindRef(CheckedKey);
+		UE_LOG(ExtensionLog, Warning, TEXT("[%s] GetCheckedOne: %s Does Not Have CheckedOne!"), *WorldContextObject->GetFName().ToString(), *MainKey);
+		return nullptr;
 	}
 
-	UE_LOG(ExtensionLog, Warning, TEXT("[%s] GetCheckedOne: %s Does Not Have CheckedOne!"), *WorldContextObject->GetFName().ToString(), *MainKey);
-	return nullptr;
+	return (Manager->CheckBoxMainMap.Find(MainKey)->CheckBoxChildMap).FindRef(CheckedKey);
 }
 
 TArray<FString> UCheckBoxLibrary::GetMainKeyArray(UObject* WorldContextObject)
@@ -270,13 +270,13 @@ void UCheckBoxLibrary::SetOneExtCheckedState(UObject* WorldContextObject, FStrin
 	if (CheckedOne != nullptr && State != ECheckBoxState::Unchecked)
 	{
 		//Manager->CheckBoxMainMap.Find(MainKey)->CheckedChildKey = "ChildKey_NULL";
-		CheckedOne->SetExtCheckedState(ECheckBoxState::Unchecked, true);
+		CheckedOne->SetExtCheckedState(ECheckBoxState::Unchecked, false);
 		
 	}
 
 	if (CheckBox != nullptr)
 	{
 		//Manager->CheckBoxMainMap.Find(MainKey)->CheckedChildKey = ChildKey;
-		CheckBox->SetExtCheckedState(State, true);
+		CheckBox->SetExtCheckedState(State, false);
 	}
 }

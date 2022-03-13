@@ -65,7 +65,7 @@ UExtUserWidget* UWidgetLibrary::GetWidget(UObject* WorldContextObject, FString W
 	return nullptr;
 }
 
-UExtUserWidget* UWidgetLibrary::GetOneWidgetOfGroup(UObject* WorldContextObject, FString WidgetMainKey, FString WidgetChildKey)
+UExtUserWidget* UWidgetLibrary::GetWidgetOfGroup(UObject* WorldContextObject, FString WidgetMainKey, FString WidgetChildKey)
 {
 	UWidgetManager* WidgetManager = GetWidgetManager(WorldContextObject);
 
@@ -91,7 +91,7 @@ FWidgetGroup UWidgetLibrary::GetWidgetGroup(UObject* WorldContextObject, FString
 	return FWidgetGroup();
 }
 
-TArray<UExtUserWidget*> UWidgetLibrary::GetWidgetArray(UObject* WorldContextObject, FString WidgetMainKey)
+TArray<UExtUserWidget*> UWidgetLibrary::GetWidgetArrayOfGroup(UObject* WorldContextObject, FString WidgetMainKey)
 {
 	UWidgetManager* WidgetManager = GetWidgetManager(WorldContextObject);
 
@@ -108,6 +108,60 @@ TArray<UExtUserWidget*> UWidgetLibrary::GetWidgetArray(UObject* WorldContextObje
 	return TArray<UExtUserWidget*>();
 }
 
+TArray<UExtUserWidget*> UWidgetLibrary::GetAllWidget(UObject* WorldContextObject)
+{
+	TArray<UExtUserWidget*> WidgetArray = TArray<UExtUserWidget*>();
+
+	UWidgetManager* WidgetManager = GetWidgetManager(WorldContextObject);
+	if (WidgetManager == nullptr)
+	{
+		return WidgetArray;
+	}
+
+	//获取 WidgetMap 中的所有 ExtUserWidget
+	for (auto& Itr : WidgetManager->WidgetMap)
+	{
+		WidgetArray.Add(Itr.Value);
+	}
+
+	//获取 WidgetMainMap 中所有组的所有 ExtUserWidget
+	for (auto& Itr : WidgetManager->WidgetMainMap)
+	{
+		TArray<UExtUserWidget*> TempWidgetArray = TArray<UExtUserWidget*>();
+		Itr.Value.WidgetChildMap.GenerateValueArray(TempWidgetArray);
+		WidgetArray.Append(TempWidgetArray);
+	}
+
+	return WidgetArray;
+}
+
+TArray<FString> UWidgetLibrary::GetAllWidgetKey(UObject* WorldContextObject)
+{
+	TArray<FString> KeyArray = TArray<FString>();
+
+	UWidgetManager* WidgetManager = GetWidgetManager(WorldContextObject);
+	if (WidgetManager == nullptr)
+	{
+		return KeyArray;
+	}
+
+	//获取 WidgetMap 中的所有 ExtUserWidget
+	for (auto& Itr : WidgetManager->WidgetMap)
+	{
+		KeyArray.Add(Itr.Key);
+	}
+
+	//获取 WidgetMainMap 中所有组的所有 ExtUserWidget
+	for (auto& Itr : WidgetManager->WidgetMainMap)
+	{
+		TArray<FString> TempWidgetArray = TArray<FString>();
+		Itr.Value.WidgetChildMap.GenerateKeyArray(TempWidgetArray);
+		KeyArray.Append(TempWidgetArray);
+	}
+
+	return KeyArray;
+}
+
 void UWidgetLibrary::RemoveWidget(UObject* WorldContextObject, FString WidgetKey)
 {
 	UWidgetManager* WidgetManager = GetWidgetManager(WorldContextObject);
@@ -116,19 +170,23 @@ void UWidgetLibrary::RemoveWidget(UObject* WorldContextObject, FString WidgetKey
 
 	if (WidgetManager != nullptr && Widget != nullptr)
 	{
+		UE_LOG(ExtensionLog, Log, TEXT("[%s] RemoveWidget(): 从 WidgetMap 中移除 %s !"), *WorldContextObject->GetName(), *Widget->GetName());
 		WidgetManager->WidgetMap.Remove(WidgetKey);
-		Widget->RemoveFromParent();
+		WidgetManager->WidgetMap.Compact();
+		WidgetManager->WidgetMap.Shrink();
 	}
 }
 
 void UWidgetLibrary::RemoveOneOfGroupWidget(UObject* WorldContextObject, FString WidgetMainKey, FString WidgetChildKey)
 {
 	UWidgetManager* WidgetManager = GetWidgetManager(WorldContextObject);
-	UExtUserWidget* Widget = GetOneWidgetOfGroup(WorldContextObject, WidgetMainKey, WidgetChildKey);
+	UExtUserWidget* Widget = GetWidgetOfGroup(WorldContextObject, WidgetMainKey, WidgetChildKey);
 
 	if (WidgetManager != nullptr && Widget != nullptr)
 	{
+		UE_LOG(ExtensionLog, Log, TEXT("[%s] RemoveWidget(): 从 %s 中移除 %s !"), *WorldContextObject->GetName(), *WidgetChildKey, *Widget->GetName());
 		GetWidgetGroup(WorldContextObject, WidgetMainKey).WidgetChildMap.Remove(WidgetChildKey);
-		Widget->RemoveFromParent();
+		GetWidgetGroup(WorldContextObject, WidgetMainKey).WidgetChildMap.Compact();
+		GetWidgetGroup(WorldContextObject, WidgetMainKey).WidgetChildMap.Shrink();
 	}
 }

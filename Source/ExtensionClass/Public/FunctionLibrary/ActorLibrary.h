@@ -49,40 +49,62 @@ public:
 	/**
 	* 添加一个 Actor 到 ActorManager.GroupActorMainMap
 	* 
-	* @param	MainKey		添加到的 ActorGroup 的 Key
-	* @param	ChildKey	添加到的 ActorGroup 中 Actor 的 Key
+	* @param	GroupKey	添加到的 ActorGroup 的 Key
+	* @param	ActorKey	添加到的 ActorGroup 中 Actor 的 Key
 	* @param	Actor		添加的 Actor
 	*/
 	UFUNCTION(BlueprintCallable, meta = (WorldContext = "WorldContextObject"), Category = "ExtensionClass|ActorLibrary")
-	static void AddGroupActor(UObject* WorldContextObject, FString MainKey, FString ChildKey, AActor* Actor);
+	static void AddGroupActor(UObject* WorldContextObject, FString GroupKey, FString ActorKey, AActor* Actor);
 
 	/**
 	* 从 ActorManager.GroupActorMainMap 中获取一个Actor
 	* 
-	* @param	MainKey		用于查找 ActorGroup 的 Key
-	* @param	ChildKey	用于在 ActorGroup 中查找 Actor 的 Key
+	* @param	GroupKey	用于查找 ActorGroup 的 Key
+	* @param	ActorKey	用于在 ActorGroup 中查找 Actor 的 Key
 	* @return				查找到的 Actor
 	*/
 	UFUNCTION(BlueprintPure, meta = (WorldContext = "WorldContextObject"), Category = "ExtensionClass|ActorLibrary")
-	static AActor* GetGroupActor(UObject* WorldContextObject, FString MainKey, FString ChildKey);
+	static AActor* GetGroupActor(UObject* WorldContextObject, FString GroupKey, FString ActorKey);
 
 	/**
 	* 添加一组 Actor 到 ActorManager.GroupActorMainMap
 	* 
-	* @param	bObjectNameAsChildKey	使用 Actor 的 ObjectName() 作为 ChildKey
-	* @param	MainKey					添加到的 ActorGroup 的 Key
-	* @param	ChildKeyArray			用于查找 Actor 的 Key
+	* @param	bObjectNameAsActorKey	使用 Actor 的 ObjectName() 作为 ActorKey
+	* @param	GroupKey				添加到的 ActorGroup 的 Key
+	* @param	ActorKeyArray			用于查找 Actor 的 Key
 	* @param	ActorArray				添加的 Actor
 	*/
 	UFUNCTION(BlueprintCallable, meta = (WorldContext = "WorldContextObject"), Category = "ExtensionClass|ActorLibrary")
-	static void AddActorGroup(UObject* WorldContextObject, bool bObjectNameAsChildKey, FString MainKey, TArray<FString> ChildKeyArray, TArray<AActor*> ActorArray);
+	static void AddActorGroup(UObject* WorldContextObject, bool bObjectNameAsActorKey, FString GroupKey, TArray<FString> ActorKeyArray, TArray<AActor*> ActorArray);
 
 	/**
 	* 从 ActorManager.GroupActorMainMap 中获取一组 Actor 作为数组返回
 	* 
-	* @param	MainKey		用于查找 ActorGroup 的 Key
-	* @return				查找到的 ActorGroup
+	* @param	GroupKey		用于查找 ActorGroup 的 Key
+	* @return					查找到的 ActorGroup
 	*/
 	UFUNCTION(BlueprintPure, meta = (WorldContext = "WorldContextObject"), Category = "ExtensionClass|ActorLibrary")
-	static TArray<AActor*> GetActorGroup(UObject* WorldContextObject, FString MainKey);
+	static TArray<AActor*> GetActorGroup(UObject* WorldContextObject, FString GroupKey);
+
+	/**
+	* 设置一组 ActorGroup 的可见性
+	* 
+	* @param	GroupKey		用于查找 ActorGroup 的 Key
+	* @param	bNewHidden		新的可见性
+	* @param	bCustomHidden	如果是 AExtActor 类或其子类则调用自定义方法
+	*/
+	UFUNCTION(BlueprintCallable, meta = (WorldContext = "WorldContextObject"), Category = "ExtensionClass|ActorLibrary")
+	static void SetActorGroupHidden(UObject* WorldContextObject, FString GroupKey, bool bNewHidden, bool bCustomHidden);
+
+	/**
+	* 设置一组 ActorGroup 中的某一个的可见性
+	* 
+	* @param	GroupKey		用于查找 ActorGroup 的 Key
+	* @param	ActorKey		用于在 ActorGroup 中查找 Actor 的 Key
+	* @param	bNewHidden		新的可见性
+	* @param	bSetOtherHide	是否隐藏组内的其它 Actor
+	* @param	bCustomHidden	如果是 AExtActor 类或其子类则调用自定义方法
+	*/
+	UFUNCTION(BlueprintCallable, meta = (WorldContext = "WorldContextObject"), Category = "ExtensionClass|ActorLibrary")
+	static void SetGroupActorHidden(UObject* WorldContextObject, FString GroupKey, FString ActorKey, bool bNewHidden, bool bSetOtherHide, bool bCustomHidden);
 };

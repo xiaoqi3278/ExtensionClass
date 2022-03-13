@@ -24,11 +24,11 @@ public:
 public:
 	/** 输出所有 ExtCheckBox 组的主键到日志中 */
 	UFUNCTION(Exec)
-	void ShowMainKey();
+	void ShowAllExtCheckBoxMainKey();
 
 	/** 输出对应 ExtCheckBox 组的所有 ChileKey 到日志中 */
 	UFUNCTION(Exec)
-	void ShowChildKey(FString MainKey);
+	void ShowAllExtCheckBoxChildKeyOfGroup(FString MainKey);
 
 	/** 输出所有的 Model 名称到日志中 */
 	UFUNCTION(Exec)
@@ -37,6 +37,10 @@ public:
 	/** 输出所有的 Model	数量到日志中 */
 	UFUNCTION(Exec)
 	void ShowAllModelNum();
+
+	/** 输出所有已被 WidgetManager 管理的 Widget 到日志中 */
+	UFUNCTION(Exec)
+	void ShowAllManagedWidget();
 
 	UFUNCTION(Exec)
 	void ShowTest();

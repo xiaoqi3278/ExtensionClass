@@ -51,6 +51,6 @@ public:
 
 	/** 自定义隐藏 ExtActor, 会执行 OnActorHiddenChanged 绑定的事件*/
 	UFUNCTION(BlueprintCallable)
-	void SetExtActorHiddenInGame(bool NewHidden);
+	void SetExtActorHiddenInGame(bool bNewHidden);
 
 };

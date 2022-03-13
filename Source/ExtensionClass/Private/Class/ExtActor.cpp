@@ -57,10 +57,12 @@ void AExtActor::Tick(float DeltaTime)
 
 }
 
-void AExtActor::SetExtActorHiddenInGame(bool NewHidden)
+void AExtActor::SetExtActorHiddenInGame(bool bNewHidden)
 {
-	this->SetActorHiddenInGame(NewHidden);
-
-	OnActorHiddenChanged.Broadcast(NewHidden);
+	if (IsHidden() != bNewHidden)
+	{
+		this->SetActorHiddenInGame(bNewHidden);
+		OnActorHiddenChanged.Broadcast(bNewHidden);
+	}
 }
 

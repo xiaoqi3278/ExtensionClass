@@ -51,6 +51,10 @@ public:
 public:
 	virtual void Init() override;
 
+	/** 模块开始 */
+	UFUNCTION(BlueprintCallable, Category = "ExtensionClass|Frame|ExtGameInstance")
+	void CallModelManagerBegin();
+
 protected:
 	virtual void OnStart() override;
 };
