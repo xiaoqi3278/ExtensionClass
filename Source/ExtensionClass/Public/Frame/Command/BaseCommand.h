@@ -13,5 +13,11 @@ UCLASS(BlueprintType)
 class EXTENSIONCLASS_API UBaseCommand : public UExtObject
 {
 	GENERATED_BODY()
+
+public:
+
+	/** 命令行为是创建还是销毁 */
+	UPROPERTY(BlueprintReadWrite)
+	bool bIsCreate = true;
 	
 };

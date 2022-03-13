@@ -11,8 +11,8 @@ void UExtCheckBox::SynchronizeProperties()
 {
 	Super::SynchronizeProperties();
 	
-	if (bDontManage)
-		return;
+	//if (bDontManage)
+	//	return;
 
 	this->SetCheckedState(bIsDefaultChecked ? ECheckBoxState::Checked : ECheckBoxState::Unchecked);
 
@@ -58,10 +58,10 @@ void UExtCheckBox::GenerateToIndex(FString GenerateKey)
 	int32 ChildKeyAsNum = FCString::Atoi(*ChildKey);
 	
 	//解析失败
-	if (AddNum == 0 || (ChildKeyAsNum == 0 && ChildKey != "0"))
-	{
-		return;
-	}
+	//if (AddNum == 0 || (ChildKeyAsNum == 0 && ChildKey != "0"))
+	//{
+	//	return;
+	//}
 
 	if (LeftString == "ChildKey")
 	{

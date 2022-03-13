@@ -79,7 +79,7 @@ UBaseModel* UModelLibrary::CreateModel(UObject* WorldContextObject, TSubclassOf<
 void UModelLibrary::DestroyModel(UObject* WorldContextObject, TSubclassOf<UBaseModel> ModelClass)
 {
 	UModelManager* ModelManager = GetModelManager(WorldContextObject);
-	if (CheckModelManagerAndOutLog(WorldContextObject, ModelManager, "DestroyModel"))
+	if (CheckModelManagerAndOutLog(WorldContextObject, ModelManager, "DestroyModel") && ModelClass != nullptr)
 	{
 		ModelManager->ModelTree->DeleteNode(ModelClass);
 		UE_LOG(ExtensionLog, Log, TEXT("[%s] DestroyModel(): 销毁 Model: %s"), *WorldContextObject->GetName(), *ModelClass->GetName());
