@@ -57,7 +57,7 @@ AActor* UActorLibrary::GetSingleActor(UObject* WorldContextObject, FString Actor
 	return ActorManager->SingleActorMap.FindRef(ActorKey);
 }
 
-void UActorLibrary::AddGroupActor(UObject* WorldContextObject, FString GroupKey, FString ActorKey, AActor* Actor)
+void UActorLibrary::AddGroupActor(UObject* WorldContextObject, FString GroupKey, FString ActorKey, AActor* Actor, bool bSortByKeyAsInt)
 {
 	UActorManager* ActorManager = GetActorManager(WorldContextObject);
 
@@ -67,6 +67,14 @@ void UActorLibrary::AddGroupActor(UObject* WorldContextObject, FString GroupKey,
 	}
 
 	ActorManager->GroupActorMainMap.FindOrAdd(GroupKey).GroupActorChildMap.Emplace(ActorKey, Actor);
+
+	//升序排列
+	if (bSortByKeyAsInt)
+	{
+		ActorManager->GroupActorMainMap.Find(GroupKey)->GroupActorChildMap.KeySort([](FString A, FString B) {
+			return FCString::Atoi(*A) < FCString::Atoi(*B);
+		});
+	}
 }
 
 AActor* UActorLibrary::GetGroupActor(UObject* WorldContextObject, FString GroupKey, FString ActorKey)
@@ -125,6 +133,24 @@ TArray<AActor*> UActorLibrary::GetActorGroup(UObject* WorldContextObject, FStrin
 	TempGroupMap.GenerateValueArray(ActorArray);
 
 	return ActorArray;
+}
+
+TMap<FString, AActor*> UActorLibrary::GetGroupActorChildMap(UObject* WorldContextObject, FString GroupKey)
+{
+	UActorManager* ActorManager = GetActorManager(WorldContextObject);
+
+	if (CheckAndOutLog(WorldContextObject, ActorManager, "GetActorGroup") || !ActorManager->GroupActorMainMap.Contains(GroupKey))
+	{
+		return TMap<FString, AActor*>();
+	}
+
+	if (!ActorManager->GroupActorMainMap.Contains(GroupKey))
+	{
+		UE_LOG(ExtensionLog, Warning, TEXT("[%s] GetGroupActorChildMap(): ActorManager->GroupActorMainMap 中不包含 %s"), *WorldContextObject->GetName(), *GroupKey);
+		return TMap<FString, AActor*>();
+	}
+
+	return ActorManager->GroupActorMainMap.Find(GroupKey)->GroupActorChildMap;
 }
 
 void UActorLibrary::SetActorGroupHidden(UObject* WorldContextObject, FString GroupKey, bool bNewHidden, bool bCustomHidden)

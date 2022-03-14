@@ -14,6 +14,7 @@
 class UCheckBoxManager;
 
 DECLARE_DYNAMIC_MULTICAST_DELEGATE_TwoParams(FExtOnCheckStateChanged, bool, bIsChecked, int32, Index);
+DECLARE_DYNAMIC_MULTICAST_DELEGATE_OneParam(FExtOnVisibilityChanged, ESlateVisibility, InVisiBility);
 
 UCLASS()
 class EXTENSIONCLASS_API UExtCheckBox : public UCheckBox
@@ -36,6 +37,10 @@ public:
 	/** 当前 ExtCheckBox 选中状态发生改变时调用 */
 	UPROPERTY(BlueprintAssignable, Category = "ExtensionClass|ExtCheckBox|Event")
 	FExtOnCheckStateChanged OnExtCheckStateChanged;
+
+	/** 使用自定义方法改变 Visibility 时调用 */
+	UPROPERTY(BlueprintAssignable, Category = "ExtensionClass|ExtCheckBox|Event")
+	FExtOnVisibilityChanged OnExtVisibilityChanged;
 
 private:
 	/** 根据自定规则自动生成 Index */
@@ -100,5 +105,13 @@ public:
 	*/
 	UFUNCTION(BlueprintCallable)
 	void SetExtCheckedState(ECheckBoxState ExtCheckedState, bool bPureSet);
+
+	/** 
+	* 设置当前 ExtCheckBox 的选中状态，会调用 OnVisibilityChanged 绑定的事件
+	* 
+	* @param	InVisibility		设置的可见状态
+	*/
+	UFUNCTION(BlueprintCallable)
+	void SetExtVisibility(ESlateVisibility InVisibility);
 };
 

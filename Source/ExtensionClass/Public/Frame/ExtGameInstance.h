@@ -48,12 +48,20 @@ public:
 	UPROPERTY(EditDefaultsOnly)
 	TSubclassOf<UModelManager> ModelManagerClass;
 
+	/** 当前使用的点位 Key */
+	UPROPERTY(BlueprintReadWrite)
+	FString CurrentPointKey;
+
 public:
 	virtual void Init() override;
 
 	/** 模块开始 */
 	UFUNCTION(BlueprintCallable, Category = "ExtensionClass|Frame|ExtGameInstance")
 	void CallModelManagerBegin();
+
+	/** 读取点位文件 */
+	UFUNCTION(BlueprintImplementableEvent)
+	void ReadPointFile();
 
 protected:
 	virtual void OnStart() override;

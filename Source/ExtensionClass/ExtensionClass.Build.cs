@@ -26,6 +26,10 @@ public class ExtensionClass : ModuleRules
 			new string[]
 			{
 				"Core",
+				"CommonlyFunction",
+				"InputCore",
+				"Json",
+				"CurrencyCamera"
 				// ... add other public dependencies that you statically link with here ...
 			}
 			);
@@ -38,7 +42,7 @@ public class ExtensionClass : ModuleRules
 				"Engine",
 				"Slate",
 				"SlateCore",
-				"UMG",
+				"UMG"
 				// ... add private dependencies that you statically link with here ...	
 			}
 			);

@@ -42,6 +42,10 @@ public:
 	UFUNCTION(Exec)
 	void ShowAllManagedWidget();
 
+	/** 设置当前使用点位的 Transform */
+	UFUNCTION(exec)
+	void SetCurrentPoint();
+
 	UFUNCTION(Exec)
 	void ShowTest();
 };

@@ -96,12 +96,13 @@ TSharedPtr<FModelTreeNode> UModelTree::SearchNode(TSubclassOf<UBaseModel> Search
 void UModelTree::DeleteNode(TSubclassOf<UBaseModel> DeleteNodeClass)
 {
 	TSharedPtr<FModelTreeNode> DeleteNode = SearchNode(DeleteNodeClass, RootNode);
-	TSharedPtr<FModelTreeNode> ParentNode = SearchNode(DeleteNode->ParentModelClass, RootNode);
 
 	if (DeleteNode == nullptr || DeleteNode->Model == nullptr)
 	{
 		return;
 	}
+
+	TSharedPtr<FModelTreeNode> ParentNode = SearchNode(DeleteNode->ParentModelClass, RootNode);
 
 	//删除子节点
 	//for (auto& Itr : DeleteNode->ChildNodes)

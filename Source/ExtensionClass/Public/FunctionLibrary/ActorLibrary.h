@@ -49,12 +49,13 @@ public:
 	/**
 	* 添加一个 Actor 到 ActorManager.GroupActorMainMap
 	* 
-	* @param	GroupKey	添加到的 ActorGroup 的 Key
-	* @param	ActorKey	添加到的 ActorGroup 中 Actor 的 Key
-	* @param	Actor		添加的 Actor
+	* @param	GroupKey			添加到的 ActorGroup 的 Key
+	* @param	ActorKey			添加到的 ActorGroup 中 Actor 的 Key
+	* @param	Actor				添加的 Actor
+	* @param	bSortByKeyAsInt		利用 ActorKey 进行升序排序, 必须保证键值能转换为 int 类型
 	*/
 	UFUNCTION(BlueprintCallable, meta = (WorldContext = "WorldContextObject"), Category = "ExtensionClass|ActorLibrary")
-	static void AddGroupActor(UObject* WorldContextObject, FString GroupKey, FString ActorKey, AActor* Actor);
+	static void AddGroupActor(UObject* WorldContextObject, FString GroupKey, FString ActorKey, AActor* Actor, bool bSortByKeyAsInt);
 
 	/**
 	* 从 ActorManager.GroupActorMainMap 中获取一个Actor
@@ -85,6 +86,14 @@ public:
 	*/
 	UFUNCTION(BlueprintPure, meta = (WorldContext = "WorldContextObject"), Category = "ExtensionClass|ActorLibrary")
 	static TArray<AActor*> GetActorGroup(UObject* WorldContextObject, FString GroupKey);
+
+	/** 
+	* 从 ActorManager.GroupActorMainMap 中获取一个 GroupActorChildMap
+	* @param	GroupKey		用于查找 ActorGroup 的 Key
+	* @return					查找到的 GroupActorChildMap
+	*/
+	UFUNCTION(BlueprintPure, meta = (WorldContext = "WorldContextObject"), Category = "ExtensionClass|ActorLibrary")
+	static TMap<FString, AActor*> GetGroupActorChildMap(UObject* WorldContextObject, FString GroupKey);
 
 	/**
 	* 设置一组 ActorGroup 的可见性

@@ -124,3 +124,9 @@ void UExtCheckBox::SetExtCheckedState(ECheckBoxState ExtCheckedState, bool bPure
 		OnExtCheckStateChanged.Broadcast(ExtCheckedState == ECheckBoxState::Checked, Index);
 	}
 }
+
+void UExtCheckBox::SetExtVisibility(ESlateVisibility InVisibility)
+{
+	this->SetVisibility(InVisibility);
+	OnExtVisibilityChanged.Broadcast(InVisibility);
+}
