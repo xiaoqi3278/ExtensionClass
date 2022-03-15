@@ -101,7 +101,7 @@ void UExtCheatManager::SetCurrentPoint()
 			TSharedPtr<FJsonObject> JsonObject;
 			FJsonSerializer::Deserialize(JsonReader, JsonObject);
 			TSharedPtr<FJsonObject> PointJsonObject = JsonObject->GetObjectField(GameInstance->CurrentPointKey);
-			if (PointJsonObject != nullptr)
+			if (PointJsonObject.Get() != nullptr)
 			{
 				UE_LOG(ExtensionLog, Warning, TEXT("%s"), *GameInstance->CurrentPointKey);
 				UE_LOG(ExtensionLog, Warning, TEXT("%s"), *Camera->GetActorLocation().ToString());

@@ -28,6 +28,14 @@ public:
 	UPROPERTY(BlueprintReadOnly)
 	FVector InitLocation;
 
+	/** 楼层是否是显示状态 */
+	UPROPERTY(BlueprintReadWrite)
+	bool bIsShow;
+
+	/** 楼层移动过后的位置 */
+	UPROPERTY(BlueprintReadWrite)
+	FVector SecondLocation;
+
 	/** 楼层初始旋转 */
 	UPROPERTY(BlueprintReadOnly)
 	FRotator InitRotation;

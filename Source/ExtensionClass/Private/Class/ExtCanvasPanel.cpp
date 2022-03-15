@@ -14,7 +14,7 @@ void UExtCanvasPanel::SetExtVisibility(ESlateVisibility InVisibility, bool bUnCh
 		for (auto& Itr : this->GetAllChildren())
 		{
 			UExtCheckBox* TempExtCheckBox = Cast<UExtCheckBox>(Itr);
-			if (TempExtCheckBox != nullptr)		//ExtCheckBox
+			if (TempExtCheckBox != nullptr && TempExtCheckBox->IsChecked())		//ExtCheckBox
 			{
 				TempExtCheckBox->SetExtCheckedState(ECheckBoxState::Unchecked, !bExecBindWhenUnCheck);
 			}

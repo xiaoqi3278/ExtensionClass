@@ -31,7 +31,7 @@ public:
 	FString ChildKey;
 
 	/** 当前 ExtCheckBox 的标识 */
-	UPROPERTY(EditAnywhere, BlueprintReadOnly, Category = "ExtensionClass|ExtCheckBox")
+	UPROPERTY(EditAnywhere, BlueprintReadWrite, Category = "ExtensionClass|ExtCheckBox")
 	int32 Index;
 
 	/** 当前 ExtCheckBox 选中状态发生改变时调用 */

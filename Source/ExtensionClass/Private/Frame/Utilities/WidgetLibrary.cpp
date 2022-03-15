@@ -50,7 +50,8 @@ void UWidgetLibrary::AddToWidgetManagerOfGroup(UObject* WorldContextObject, FStr
 
 	if (WidgetManager != nullptr)
 	{
-		GetWidgetGroup(WorldContextObject, WidgetMainKey).WidgetChildMap.Emplace(WidgetChildKey, Widget);
+		//GetWidgetGroup(WorldContextObject, WidgetMainKey).WidgetChildMap.Emplace(WidgetChildKey, Widget);
+		WidgetManager->WidgetMainMap.FindOrAdd(WidgetMainKey).WidgetChildMap.Emplace(WidgetChildKey, Widget);
 	}
 }
 
